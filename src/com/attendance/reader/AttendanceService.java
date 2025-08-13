@@ -22,6 +22,7 @@ public class AttendanceService {
 	
 	private double hoursPerDay;
 	private double workingDaysInMonth;
+	private Sheet sheet;
 	public void setHoursPerDay(double hours)
 	{
 		this.hoursPerDay = hours;
@@ -29,6 +30,10 @@ public class AttendanceService {
 	public void setWorkingDaysInMonth(double days)
 	{
 		this.workingDaysInMonth = days;
+	}
+	public void setSheet(Sheet sheet)
+	{
+		this.sheet = sheet;
 	}
 	public double getHoursPerDay()
 	{
@@ -38,18 +43,20 @@ public class AttendanceService {
 	{
 		return workingDaysInMonth;
 	}
+	public Sheet getSheet()
+	{
+		return sheet;
+	}
+
+
 	
-	public void loadExcelFile(String filePath)
+	public void loadExcelFile(String filePath) throws IOException
 	{
 		try(FileInputStream fis = new FileInputStream(new File(filePath));
 				Workbook workbook = new XSSFWorkbook(fis)){
-			Sheet sheet = workbook.getSheetAt(0);
+			sheet = workbook.getSheetAt(0);
+			setSheet(sheet);
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-			
 	}
 	//addHours method
 		public void addHours(Sheet sheet,Map<String, List<Double>> hoursWorked, Scanner sc, Map<String, Double> addedHours)
@@ -234,11 +241,10 @@ public class AttendanceService {
 	//displayDaysWorked method
 		public void displayDaysWorked(Sheet sheet, Map<String, List<Double>> hoursWorked, Scanner sc, Map<String, Double> daysMap)
 		{
-			System.out.println("Enter working hours in a day: ");
-			double dayHours = sc.nextDouble();
+			double dayHours = this.getHoursPerDay();
 			if(dayHours == 0)
 			{
-				System.out.println("Invalid input");
+				System.out.println("Please set hours per day first");
 				return;
 			}
 			
@@ -301,11 +307,13 @@ public class AttendanceService {
 		}
 		
 		//returns complete list of employees data
-		public static Map<String, EmployeeStats> allEmployeesData(Sheet sheet, Scanner sc)
+		public static Map<String, EmployeeStats> allEmployeesData(Sheet sheet, Scanner sc, double hoursPerDay, double workingDays)
 		{
 			Map<String, EmployeeStats> data = new HashMap<>();
 			
 			AttendanceService service = new AttendanceService();
+			service.setHoursPerDay(hoursPerDay);
+			service.setWorkingDaysInMonth(workingDays);
 			List<String> names = service.getEmployeesList(sheet);
 			Map<String, List<Double>> hoursWorked = service.hoursWorked(sheet);
 			Map<String, Double> addedHours = new HashMap<>();
