@@ -1,1 +1,14 @@
-.idea/ 
+# Compiled class files
+*.class
+
+# Eclipse project files
+.settings/
+.project
+.classpath
+bin/
+
+# Maven target directory
+target/
+
+# Logs
+*.log
