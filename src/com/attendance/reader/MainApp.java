@@ -34,10 +34,12 @@ public class MainApp {
 			System.out.println("1. Load attendance Excel file");
 			System.out.println("2. Enter working hours per day");
 			System.out.println("3. Enter working days in a month");
+			System.out.println("4. Add hours for an employee");
 			System.out.println("4. Generate report");
 			System.out.println("5. View report summary");
 			System.out.println("6. Save report to CSV");
 			System.out.println("7. Exit");
+
 			int option = sc.nextInt();
 			sc.nextLine();
 			switch (option) {
@@ -49,7 +51,8 @@ public class MainApp {
 					break;
 				case 2:
 					System.out.print("Enter working hours per day: ");
-					double hours = Double.parseDouble(sc.nextLine());
+					double hours = sc.nextDouble();
+					sc.nextLine();
 					attendanceService.setHoursPerDay(hours);
 					break;
 				case 3:
@@ -57,6 +60,8 @@ public class MainApp {
 					double days = sc.nextDouble();
 					attendanceService.setWorkingDaysInMonth(days);
 				case 4:
+				Sheet sheet = attendanceService.getSheet();
+				attendanceService.addHours(sheet, hoursWorked, sc, null);
 				case 5:
 					if (reportData != null) {
 						reportData.forEach((name, stats) -> {

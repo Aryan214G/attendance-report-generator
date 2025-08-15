@@ -307,7 +307,7 @@ public class AttendanceService {
 		}
 		
 		//returns complete list of employees data
-		public static Map<String, EmployeeStats> allEmployeesData(Sheet sheet, Scanner sc, double hoursPerDay, double workingDays)
+		public Map<String, EmployeeStats> allEmployeesData(Sheet sheet, Scanner sc, double hoursPerDay, double workingDays)
 		{
 			Map<String, EmployeeStats> data = new HashMap<>();
 			
