@@ -13,6 +13,28 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class CSVStorage {
+    public static void save(Map<String, EmployeeStats> data, String filePath) throws IOException {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // Write header
+            writer.write("Name,Original Hours,Added Hours,Final Hours,Days Worked,Working Days,Overtime,Single Punch\n");
+            
+            // Write data
+            for (Map.Entry<String, EmployeeStats> entry : data.entrySet()) {
+                String name = entry.getKey();
+                EmployeeStats stats = entry.getValue();
+                writer.write(String.format("%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+                    name,
+                    stats.getOriginalHours(),
+                    stats.getAddedHours(),
+                    stats.getFinalHours(),
+                    stats.getDaysWorked(),
+                    stats.getWorkingDays(),
+                    stats.getOvertimeHours(),
+                    stats.getSinglePunchCount()
+                ));
+            }
+        }
+    }
 
     public static void saveToCSV(Sheet sheet, Scanner sc) {
     	System.out.print("Enter month and year of the attendance data(e.g., July_2025): ");
