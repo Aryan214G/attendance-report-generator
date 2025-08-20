@@ -306,110 +306,75 @@ public class AttendanceService {
 		}
 		
 		
+				// Shared dataset storage
 		private final Map<String, List<Double>> data = new HashMap<>();
 
-		//returns complete list of employees data
-		public Map<String, List<Double>> allEmployeesData(String name, double value, int index)
-		{
+		/**
+		 * Builds and returns the full dataset for all employees.
+		 * Initializes data and runs calculations.
+		 */
+		public Map<String, List<Double>> allEmployeesData() {
+			// Ensure employee names are added
 			List<String> names = getEmployeesList(getSheet());
-			for (String empName : names) 
-			{
-    			data.putIfAbsent(empName, new ArrayList<>(Collections.nCopies(7, 0.0)));
+			for (String empName : names) {
+				data.putIfAbsent(empName, new ArrayList<>(Collections.nCopies(7, 0.0)));
 			}
 
-			//method calls
+			// Run calculations
 			hoursWorked(sheet);
 			daysWorked(sheet);
 			overtimeCalculator(sheet);
 
-			//No of hours worked
-			if(index == 0)
-			{
-				data.get(name).set(index, value);
+			// Set working days in the month for everyone
+			for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
+				data.get(entry.getKey()).set(4, getWorkingDaysInMonth());
 			}
-			//No. of hours added
-			if(index == 1)
-			{
-				if(name == null)
-				{
-					for (Map.Entry<String, List<Double>> entry : data.entrySet()) 
-					{
-    					String empName = entry.getKey();
-						double hoursAdded = data.get(empName).get(2);
-						hoursAdded += value;
-						data.get(empName).set(2, hoursAdded);	
-						return null; // Return null to indicate that all employees were updated
-					}
-				}
-				else
-				{
-					double hoursAdded = data.get(name).get(2);
-					hoursAdded += value;
-					data.get(name).set(2, hoursAdded);
-					return null; // Return null to indicate that a specific employee was updated
-				}
-			}
-			//days worked
-			if(index == 3)
-			{
-				data.get(name).set(3, value);
-				return null;
-			}
-			//overtime
-			if(index == 5)
-			{
-				data.get(name).set(5, value);
-				return null;
-			}
-			//single punches
-			if(index == 6)
-			{
-				data.get(name).set(6, value);
-				return null; 
-			}
-			//working days in month
-			for (Map.Entry<String, List<Double>> entry : data.entrySet()) 
-					{
-    					
-						data.get(entry.getKey()).set(4, getWorkingDaysInMonth());
-					}
 
-			//Total hours worked
+			return data;
+		}
+
+		/**
+		 * Updates specific employee data based on index and value.
+		 */
+		public Map<String, List<Double>> allEmployeesData(String name, double value, int index) {
+			// Ensure initialization first
+			allEmployeesData();
+
+			switch (index) {
+				case 0: // hours worked
+					data.get(name).set(0, value);
+					break;
+				case 1: // hours added
+					if (name == null) {
+						for (String empName : data.keySet()) {
+							double hoursAdded = data.get(empName).get(2) + value;
+							data.get(empName).set(2, hoursAdded);
+						}
+					} else {
+						double hoursAdded = data.get(name).get(2) + value;
+						data.get(name).set(2, hoursAdded);
+					}
+					break;
+				case 3: // days worked
+					data.get(name).set(3, value);
+					break;
+				case 5: // overtime
+					data.get(name).set(5, value);
+					break;
+				case 6: // single punches
+					data.get(name).set(6, value);
+					break;
+			}
+
+			// Recompute total hours (col 2 = worked + added)
+			if (name != null && data.containsKey(name)) {
 				double totalHoursWorked = data.get(name).get(0);
 				double addedHours = data.get(name).get(2);
 				double total = totalHoursWorked + addedHours;
 				data.get(name).set(2, total);
+			}
 
-				
-
-
-
-			// service.setHoursPerDay(hoursPerDay);
-			// service.setWorkingDaysInMonth(workingDays);
-			// List<String> names = service.getEmployeesList(sheet);
-			// Map<String, List<Double>> hoursWorked = service.hoursWorked(sheet);
-			// Map<String, Double> addedHours = new HashMap<>();
-			// Map<String, Double> daysMap = new HashMap<>();
-			// Map<String, Double> overtime = service.overtimeCalculator(sheet, hoursWorked);
-			
-			// // Call addHours with addedHours map
-			// service.addHours(sheet, hoursWorked, sc, addedHours);
-			// //Call displayDaysWorked with days map
-			// service.displayDaysWorked(sheet, hoursWorked, sc, daysMap);
-			
-			// for(String name : names)
-			// {
-			//     double hours = hoursWorked.get(name).get(0);
-			//     double added = addedHours.getOrDefault(name, 0.0);
-			//     double total = hours;
-			//     double daysWorked = daysMap.get(name);
-			//     double ot = overtime.get(name);
-			//     double workingDays = service.getWorkingDaysInMonth();
-			    
-			//     EmployeeStats stats = new EmployeeStats(hours - added, added, total, daysWorked, workingDays, ot, hoursWorked.get(name).get(1));
-			//     data.put(name, stats);
-			// }
-			
 			return data;
 		}
+
 }
