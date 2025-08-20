@@ -14,13 +14,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class ReportGenerator {
 
-    public static void generateReport(Sheet sheet, Scanner sc) {
-        System.out.print("Enter month and year of the attendance data(e.g., July_2025): ");
+    public static void generateReport(Sheet sheet, AttendanceService service)) {
         String fileNameSuffix = sc.nextLine().trim().replaceAll("\\s+", "_");
         String fileName = "attendance_report_" + fileNameSuffix + ".csv";
         Path filePath = FileUtils.getReportPathFile(fileName);
         
-        AttendanceService attendanceService = new AttendanceService();
+        
         Map<String, List<Double>> hoursWorked = attendanceService.hoursWorked(sheet);
         
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {

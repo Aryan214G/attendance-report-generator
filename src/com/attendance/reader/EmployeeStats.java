@@ -19,6 +19,17 @@ public class EmployeeStats {
         this.singlePunchCount = singlePunchCount;
     }
 
+	public EmployeeStats() {
+		this.originalHours = 0;
+		this.addedHours = 0;
+		this.finalHours = 0;
+		this.daysWorked = 0;
+		this.workingDays = 0;
+		this.overtimeHours = 0;
+		this.singlePunchCount = 0;
+	}
+	
+
     public double getOriginalHours() {
         return originalHours;
     }

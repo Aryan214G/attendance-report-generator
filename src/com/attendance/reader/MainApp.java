@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MainApp {
 	private static Scanner sc = new Scanner(System.in);
-	private static AttendanceService attendanceService = new AttendanceService();
+	private static AttendanceService service = new AttendanceService();
 
 	public static void main(String[] args) {
 		// System.out.print("Enter the Excel file path: ");
@@ -24,7 +24,7 @@ public class MainApp {
 		// Workbook workbook = new XSSFWorkbook(fis)){
 		// Sheet sheet = workbook.getSheetAt(0);
 		// MainApp MainApp = new MainApp();
-		Map<String, List<Double>> hoursWorked = attendanceService.hoursWorked(sheet);
+		Map<String, List<Double>> hoursWorked = service.hoursWorked(sheet);
 
 		boolean running = true;
 		while (running == true) {
@@ -34,7 +34,6 @@ public class MainApp {
 			System.out.println("1. Load attendance Excel file");
 			System.out.println("2. Enter working hours per day");
 			System.out.println("3. Enter working days in a month");
-			System.out.println("4. Add hours for an employee");
 			System.out.println("4. Generate report");
 			System.out.println("5. View report summary");
 			System.out.println("6. Save report to CSV");
@@ -47,21 +46,20 @@ public class MainApp {
 				case 1:
 					System.out.print("Enter Excel file path: ");
 					String filePath = sc.nextLine();
-					attendanceService.loadExcelFile(filePath);
+					service.loadExcelFile(filePath);
 					break;
 				case 2:
 					System.out.print("Enter working hours per day: ");
 					double hours = sc.nextDouble();
 					sc.nextLine();
-					attendanceService.setHoursPerDay(hours);
+					service.setHoursPerDay(hours);
 					break;
 				case 3:
 					System.out.print("Enter total working days in a month: ");
 					double days = sc.nextDouble();
-					attendanceService.setWorkingDaysInMonth(days);
+					service.setWorkingDaysInMonth(days);
 				case 4:
-				Sheet sheet = attendanceService.getSheet();
-				attendanceService.addHours(sheet, hoursWorked, sc, null);
+				ReportGenerator.generateReport(service.getSheet(), service);
 				case 5:
 					if (reportData != null) {
 						reportData.forEach((name, stats) -> {
