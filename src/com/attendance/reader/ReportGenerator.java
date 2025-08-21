@@ -13,8 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.sl.draw.geom.Path;
 
 public class ReportGenerator {
-
-    public static void generateReport(Sheet sheet, AttendanceService service) {
+    
+    public static Path getReportPathFile() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter file name for the report:");
         String fileNameSuffix = sc.nextLine().trim(); 
@@ -27,8 +27,12 @@ public class ReportGenerator {
                   + System.currentTimeMillis() + ".csv";
 
         Path filePath = FileUtils.getReportPathFile(fileName);
+        return filePath;
         
+    }
+    public static void generateReport(Sheet sheet, AttendanceService service) {
         
+        Path filePath = getReportPathFile();
         Map<String, List<Double>> dataMap = service.allEmployeesData();
         
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
