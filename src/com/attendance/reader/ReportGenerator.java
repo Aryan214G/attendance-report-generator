@@ -24,9 +24,9 @@ public class ReportGenerator {
         }   
 
         String fileName = "attendance_report_" + fileNameSuffix + "_" 
-                  + System.currentTimeMillis() + ".csv";
+                   + ".csv";
 
-        Path filePath = FileUtils.getReportPathFile(fileName);
+        Path filePath = FileUtils.getDataFilePath(fileName);
         return filePath;
         
     }

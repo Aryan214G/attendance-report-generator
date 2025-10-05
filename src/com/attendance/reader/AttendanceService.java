@@ -21,7 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class AttendanceService {
 	
-	private EmployeeStats stats = new EmployeeStats();
+//	private EmployeeStats stats = new EmployeeStats();
 	private double hoursPerDay;
 	private double workingDaysInMonth;
 	private Sheet sheet;
@@ -167,8 +167,8 @@ public class AttendanceService {
 				// hoursWorked.put(employees.get(id), new ArrayList<>());
 				// hoursWorked.get(employees.get(id)).add(total);
 				// hoursWorked.get(employees.get(id)).add(incompleteDays);
-				stats.setOriginalHours(total);
-				stats.setSinglePunchCount(incompleteDays);
+				//stats.setOriginalHours(total);
+				//stats.setSinglePunchCount(incompleteDays);
 				allEmployeesData(employees.get(id), total, 0);
 				allEmployeesData(employees.get(id), incompleteDays, 6);
 
@@ -343,6 +343,7 @@ public class AttendanceService {
 			switch (index) {
 				case 0: // hours worked
 					data.get(name).set(0, value);
+					
 					break;
 				case 1: // hours added
 					if (name == null) {
