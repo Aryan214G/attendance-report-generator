@@ -1,19 +1,11 @@
 package com.attendance.reader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.awt.Desktop;
 import java.nio.file.Path;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class MainApp {
+public class App {
 	private static Scanner sc = new Scanner(System.in);
 	private static AttendanceService service = new AttendanceService();
 
