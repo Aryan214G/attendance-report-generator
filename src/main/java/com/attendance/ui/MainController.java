@@ -23,6 +23,8 @@ public class MainController {
         Parent root = FXMLLoader.load(getClass().getResource("/com/attendance/ui/ExcelLoaderView.fxml"));
         stage = (Stage) menuBar.getScene().getWindow();
         scene = new Scene(root);
+        String css = this.getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
     }
@@ -31,6 +33,8 @@ public class MainController {
         Parent root = FXMLLoader.load(getClass().getResource("/com/attendance/ui/MainView.fxml"));
         scene = new Scene(root);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        String css = this.getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
     }
