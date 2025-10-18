@@ -20,17 +20,34 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Text layoutX="392.0" layoutY="162.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working hours per day">
+      <Text layoutX="162.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working hours per day">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField layoutX="425.0" layoutY="210.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" />
-      <Text layoutX="383.0" layoutY="330.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working days in a month">
+      <TextField layoutX="162.0" layoutY="444.0" prefHeight="39.0" prefWidth="329.0" />
+      <Text layoutX="515.0" layoutY="433.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working days in a month">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField layoutX="429.0" layoutY="378.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" />
+      <TextField layoutX="515.0" layoutY="444.0" prefHeight="39.0" prefWidth="329.0" />
+      <Text layoutX="162.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter month">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField layoutX="162.0" layoutY="341.0" prefHeight="39.0" prefWidth="329.0" />
+      <Text layoutX="515.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Year">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField layoutX="515.0" layoutY="340.0" prefHeight="39.0" prefWidth="329.0" />
+      <Text layoutX="313.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter attendance details">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

@@ -1,18 +1,23 @@
 package com.attendance.ui;
 
+import com.attendance.reader.AttendanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
-import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+
+import static com.attendance.reader.App.service;
 
 public class ExcelLoaderController {
-
+    private final AttendanceService service = new AttendanceService();
 
     MainController mainController = new MainController();
 
@@ -22,8 +27,7 @@ public class ExcelLoaderController {
     private Label fileNameLabel;
 
     @FXML
-    private void handleUploadFile(ActionEvent event)
-    {
+    private void handleUploadFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Excel File");
         fileChooser.getExtensionFilters().addAll(
@@ -36,7 +40,7 @@ public class ExcelLoaderController {
         if (selectedFile != null) {
             fileNameLabel.setText(selectedFile.getName());
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            // TODO: Process file (load Excel, display, etc.)
+            service.loadExcelFile(selectedFile.getAbsolutePath());
         } else {
             fileNameLabel.setText("No file selected");
         }
@@ -47,10 +51,14 @@ public class ExcelLoaderController {
         // When a file is dragged over the rectangle
         dropRectangle.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
-                // Only accept Excel files
                 File file = event.getDragboard().getFiles().get(0);
                 if (file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls")) {
-                    event.acceptTransferModes(javafx.scene.input.TransferMode.COPY);
+                    event.acceptTransferModes(TransferMode.COPY);
+                    // Remove previous success style and add drag-over if not already present
+                    dropRectangle.getStyleClass().remove("drop-success");
+                    if (!dropRectangle.getStyleClass().contains("drag-over")) {
+                        dropRectangle.getStyleClass().add("drag-over");
+                    }
                 }
             }
             event.consume();
@@ -62,15 +70,30 @@ public class ExcelLoaderController {
             boolean success = false;
             if (db.hasFiles()) {
                 File file = db.getFiles().get(0);
-                // Only process Excel files
                 if (file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls")) {
                     fileNameLabel.setText(file.getName());
                     System.out.println("Dropped file: " + file.getAbsolutePath());
-                    // TODO: Add code to process the Excel file
+                    try {
+                        service.loadExcelFile(file.getAbsolutePath());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     success = true;
+
+                    // Update visual feedback
+                    dropRectangle.getStyleClass().remove("drag-over");
+                    if (!dropRectangle.getStyleClass().contains("drop-success")) {
+                        dropRectangle.getStyleClass().add("drop-success");
+                    }
                 }
             }
             event.setDropCompleted(success);
+            event.consume();
+        });
+
+        // Optional: reset drag-over style if drag exits the rectangle
+        dropRectangle.setOnDragExited(event -> {
+            dropRectangle.getStyleClass().remove("drag-over");
             event.consume();
         });
     }

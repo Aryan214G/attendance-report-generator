@@ -5,3 +5,25 @@
 .label{
 
 }
+
+/* Default rectangle style */
+#dropZone {
+    -fx-fill: #f0f0f0;
+    -fx-stroke: #999999;
+    -fx-stroke-width: 2;
+    -fx-arc-width: 10;
+    -fx-arc-height: 10;
+}
+
+/* When a file is dragged over */
+#dropZone.drag-over {
+    -fx-fill: #e0f7fa;
+    -fx-stroke: #00acc1;
+}
+
+/* On successful drop */
+#dropZone.drop-success {
+    -fx-fill: #c8e6c9;
+    -fx-stroke: #388e3c;
+}
+
