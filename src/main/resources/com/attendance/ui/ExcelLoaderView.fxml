@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ExcelLoaderController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fdffcd" height="502.0" layoutX="32.0" layoutY="167.0" strokeType="INSIDE" strokeWidth="0.0" width="494.0">
+      <Rectangle fx:id="dropRectangle" arcHeight="5.0" arcWidth="5.0" fill="#fdffcd" height="502.0" layoutX="32.0" layoutY="167.0" onDragDropped="#dragDropZone" onDragOver="#dragDropZone" strokeType="INSIDE" strokeWidth="0.0" width="494.0">
          <stroke>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
