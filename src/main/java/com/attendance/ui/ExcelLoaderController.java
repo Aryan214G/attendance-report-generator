@@ -1,10 +1,9 @@
 package com.attendance.ui;
 
-import com.attendance.reader.AttendanceService;
+import com.attendance.service.AttendanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -14,7 +13,7 @@ import javafx.scene.Node;
 import java.io.File;
 import java.io.IOException;
 
-import static com.attendance.reader.App.service;
+//import static com.attendance.main.App.service;
 
 public class ExcelLoaderController {
     private final AttendanceService service = new AttendanceService();

@@ -1,4 +1,7 @@
-package com.attendance.reader;
+package com.attendance.main;
+
+import com.attendance.service.AttendanceService;
+import com.attendance.report.ReportGenerator;
 
 import java.io.IOException;
 import java.util.Scanner;

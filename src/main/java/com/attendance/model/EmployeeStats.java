@@ -1,4 +1,4 @@
-package com.attendance.reader;
+package com.attendance.model;
 
 public class EmployeeStats {
     private double originalHours;

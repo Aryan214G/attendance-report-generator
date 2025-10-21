@@ -1,4 +1,4 @@
-package com.attendance.reader;
+package com.attendance.util;
 
 import java.util.Scanner;
 
