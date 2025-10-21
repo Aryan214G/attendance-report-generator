@@ -72,11 +72,7 @@ public class ExcelLoaderController {
                 if (file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls")) {
                     fileNameLabel.setText(file.getName());
                     System.out.println("Dropped file: " + file.getAbsolutePath());
-                    try {
-                        service.loadExcelFile(file.getAbsolutePath());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    service.loadExcelFile(file.getAbsolutePath());
                     success = true;
 
                     // Update visual feedback

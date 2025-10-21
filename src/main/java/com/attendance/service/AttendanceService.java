@@ -10,12 +10,14 @@ import java.util.List;
 
 public class AttendanceService {
 
-    private List<EmployeeAttendance> attendanceList; // Loaded data
+    private List<EmployeeAttendance> attendanceList;
+    private List<ReportRow> lastGeneratedReport; // store last report
+
     private double workingHoursPerDay;
     private int workingDaysInMonth;
 
-    private ReportGenerator reportGenerator = new ReportGenerator();
-    private ReportExporter reportExporter = new ReportExporter();
+    private final ReportGenerator reportGenerator = new ReportGenerator();
+    private final ReportExporter reportExporter = new ReportExporter();
 
     // 1. Load Excel
     public void loadExcelFile(String path) {
@@ -40,19 +42,22 @@ public class AttendanceService {
             System.out.println("No attendance data loaded.");
             return null;
         }
-        return reportGenerator.generateReport(attendanceList, workingDaysInMonth, workingHoursPerDay);
+        lastGeneratedReport = reportGenerator.generateReport(attendanceList, workingDaysInMonth, workingHoursPerDay);
+        return lastGeneratedReport;
     }
 
     // 5. Display report
-    public void displayReport(List<ReportRow> report) {
-        if (report == null || report.isEmpty()) {
-            System.out.println("Report is empty.");
+    public void displayReport() {
+        if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
+            System.out.println("No report generated yet.");
             return;
         }
+
         System.out.printf("%-20s %-12s %-12s %-15s %-10s %-10s %-10s %-15s%n",
                 "Employee Name", "Hours Worked", "Hours Added", "Total Hours Worked",
                 "Days Worked", "Working Days", "Overtime", "Single Check-ins");
-        for (ReportRow row : report) {
+
+        for (ReportRow row : lastGeneratedReport) {
             System.out.printf("%-20s %-12.2f %-12.2f %-15.2f %-10d %-10d %-10.2f %-15d%n",
                     row.getEmployeeName(),
                     row.getHoursWorked(),
@@ -65,12 +70,32 @@ public class AttendanceService {
         }
     }
 
-    // 6. Save report to CSV
-    public void saveReport(List<ReportRow> report, String filePath) {
-        if (report == null || report.isEmpty()) {
+    // 6. Add manual hours
+    public void addHours(String employeeName, double extraHours) {
+        if (lastGeneratedReport == null) {
+            System.out.println("Generate a report first.");
+            return;
+        }
+
+        for (ReportRow row : lastGeneratedReport) {
+            if (row.getEmployeeName().equalsIgnoreCase(employeeName)) {
+                double newAdded = row.getHoursAdded() + extraHours;
+                row.setHoursAdded(newAdded);
+                row.setTotalHoursWorked(row.getHoursWorked() + newAdded);
+                System.out.println("Added " + extraHours + " hours to " + employeeName);
+                return;
+            }
+        }
+        System.out.println("Employee not found in report.");
+    }
+
+
+    // 7. Save report to CSV
+    public void saveReport(String filePath) {
+        if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
             System.out.println("Nothing to save.");
             return;
         }
-        reportExporter.saveReportAsCSV(report, filePath);
+        reportExporter.saveReportAsCsv(lastGeneratedReport, filePath);
     }
 }

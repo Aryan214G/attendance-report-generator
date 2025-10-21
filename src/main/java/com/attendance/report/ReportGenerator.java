@@ -35,7 +35,7 @@ public class ReportGenerator {
             }
 
             double expectedHours = workingDaysInMonth * workingHoursPerDay;
-            double hoursAdded = Math.max(0, expectedHours - totalWorked);
+            double hoursAdded = 0;
             double totalHoursWorked = totalWorked + hoursAdded;
             double overtime = Math.max(0, totalHoursWorked - expectedHours);
 
