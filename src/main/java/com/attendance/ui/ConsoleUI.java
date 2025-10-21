@@ -54,9 +54,12 @@ public class ConsoleUI {
                     attendanceService.addHours(name, extra);
                 }
                 case 7 -> {
-                    System.out.print("Enter CSV file path to save: ");
-                    String path = sc.nextLine();
-                    attendanceService.saveReport(path);
+                    System.out.print("Enter month (1-12): ");
+                    int month = sc.nextInt();
+                    System.out.print("Enter year (e.g., 2025): ");
+                    int year = sc.nextInt();
+                    sc.nextLine();
+                    attendanceService.saveReport(month, year);
                 }
                 case 8 -> System.out.println("Exiting...");
                 default -> System.out.println("Invalid choice!");

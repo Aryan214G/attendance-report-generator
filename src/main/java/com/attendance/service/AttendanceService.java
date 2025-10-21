@@ -6,6 +6,7 @@ import com.attendance.model.ReportRow;
 import com.attendance.report.ReportGenerator;
 import com.attendance.report.ReportExporter;
 
+import java.io.File;
 import java.util.List;
 
 public class AttendanceService {
@@ -91,11 +92,25 @@ public class AttendanceService {
 
 
     // 7. Save report to CSV
-    public void saveReport(String filePath) {
+    public void saveReport(int month, int year) {
         if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
             System.out.println("Nothing to save.");
             return;
         }
-        reportExporter.saveReportAsCsv(lastGeneratedReport, filePath);
+        try {
+            String userHome = System.getProperty("user.home");
+            String documentsDir = userHome + File.separator + "Documents";
+            String reportsDir = documentsDir + File.separator + "AttendanceReports";
+            File dir = new File(reportsDir);
+            if (!dir.exists()) {
+                dir.mkdirs(); // create folder if it doesn’t exist
+            }
+
+            String fileName = String.format("Attendance_Report_%02d-%d.csv", month, year);
+            File file = new File(dir, fileName);
+            reportExporter.saveReportAsCsv(lastGeneratedReport, file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
