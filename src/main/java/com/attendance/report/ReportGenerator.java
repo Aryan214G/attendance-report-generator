@@ -1,55 +1,58 @@
 package com.attendance.report;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-
-import com.attendance.util.FileUtils;
-import com.attendance.service.AttendanceService;
-import org.apache.poi.ss.usermodel.Sheet;
-
-
-//import org.apache.poi.sl.draw.geom.Path;
+import com.attendance.model.EmployeeAttendance;
+import com.attendance.model.ReportRow;
+import java.time.LocalTime;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ReportGenerator {
-    
-    public static Path getReportPathFile() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter file name for the report:");
-        String fileNameSuffix = sc.nextLine().trim(); 
-        if (fileNameSuffix.isEmpty())
-        {
-            fileNameSuffix = "default";
-        }   
 
-        String fileName = "attendance_report_" + fileNameSuffix + "_" 
-                   + ".csv";
+    public List<ReportRow> generateReport(List<EmployeeAttendance> employees, int workingDaysInMonth, double workingHoursPerDay) {
+        List<ReportRow> report = new ArrayList<>();
 
-        Path filePath = FileUtils.getDataFilePath(fileName);
-        return filePath;
-        
-    }
-    public static void generateReport(Sheet sheet, AttendanceService service) {
-        
-        Path filePath = getReportPathFile();
-        Map<String, List<Double>> dataMap = service.allEmployeesData();
-        
-            try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                writer.write("Employee Name,Hours Worked,Hours Added,Total Hours Worked,Days Worked,Number of Working Days In The Month,Over Time (hours),Number of Single Punches\n");
-                for (Map.Entry<String, List<Double>> entry : dataMap.entrySet()) {
-                    String name = entry.getKey();
-                    List<Double> data = entry.getValue();
-                    
-                    
-                    
-                    writer.write(String.format("%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
-                        name, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6)));
+        for (EmployeeAttendance emp : employees) {
+            double totalWorked = 0;
+            int daysWorked = 0;
+            int singleCheckIns = 0;
+
+            Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
+
+            for (List<String> checkIns : dailyCheckIns.values()) {
+                if (checkIns.isEmpty()) continue;
+                daysWorked++;
+
+                if (checkIns.size() == 1) singleCheckIns++;
+
+                // Pair in/out and sum durations
+                for (int i = 0; i < checkIns.size() - 1; i += 2) {
+                    LocalTime in = LocalTime.parse(checkIns.get(i));
+                    LocalTime out = LocalTime.parse(checkIns.get(i + 1));
+                    totalWorked += Duration.between(in, out).toMinutes() / 60.0;
                 }
-                System.out.println("Report saved at: " + filePath.toString());
-        } catch (IOException e) {
-            System.out.println("Error saving report: " + e.getMessage());
+            }
+
+            double expectedHours = workingDaysInMonth * workingHoursPerDay;
+            double hoursAdded = Math.max(0, expectedHours - totalWorked);
+            double totalHoursWorked = totalWorked + hoursAdded;
+            double overtime = Math.max(0, totalHoursWorked - expectedHours);
+
+            ReportRow row = new ReportRow(
+                    emp.getEmployeeName(),
+                    totalWorked,
+                    hoursAdded,
+                    totalHoursWorked,
+                    daysWorked,
+                    workingDaysInMonth,
+                    overtime,
+                    singleCheckIns
+            );
+
+            report.add(row);
         }
+
+        return report;
     }
 }
