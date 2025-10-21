@@ -19,7 +19,7 @@ public class ConsoleUI {
             System.out.println("4. Generate report");
             System.out.println("5. View report");
             System.out.println("6. Add hours");
-            System.out.println("7. Save report to CSV");
+            System.out.println("7. Save report");
             System.out.println("8. Exit");
             System.out.print("Enter choice: ");
             choice = sc.nextInt();
@@ -58,8 +58,10 @@ public class ConsoleUI {
                     int month = sc.nextInt();
                     System.out.print("Enter year (e.g., 2025): ");
                     int year = sc.nextInt();
+                    System.out.println("1. Export as CSV\n2. Export as PDF");
+                    int option = sc.nextInt();
                     sc.nextLine();
-                    attendanceService.saveReport(month, year);
+                    attendanceService.saveReport(option, month, year);
                 }
                 case 8 -> System.out.println("Exiting...");
                 default -> System.out.println("Invalid choice!");
