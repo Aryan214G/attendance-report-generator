@@ -1,26 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.MainController">
-   <children>
-      <Text layoutX="464.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Report">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Button layoutX="442.0" layoutY="652.0" mnemonicParsing="false" text="Save report">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Button>
-      <Button layoutX="916.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Finish">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Button>
-   </children>
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ReportController">
+    <children>
+
+        <Label layoutX="400.0" layoutY="40.0" text="Attendance Report">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+
+
+        <!-- Table inside scroll pane -->
+        <ScrollPane layoutX="50" layoutY="80" prefWidth="900" prefHeight="500">
+            <content>
+                <TableView fx:id="reportTable" prefWidth="900" prefHeight="500">
+                    <columns>
+                        <TableColumn fx:id="employeeNameCol" text="Employee Name" prefWidth="150"/>
+                        <TableColumn fx:id="hoursWorkedCol" text="Hours Worked" prefWidth="100"/>
+                        <TableColumn fx:id="hoursAddedCol" text="Hours Added" prefWidth="100"/>
+                        <TableColumn fx:id="totalHoursCol" text="Total Hours" prefWidth="100"/>
+                        <TableColumn fx:id="daysWorkedCol" text="Days Worked" prefWidth="100"/>
+                        <TableColumn fx:id="workingDaysCol" text="Working Days" prefWidth="100"/>
+                        <TableColumn fx:id="overtimeCol" text="Overtime" prefWidth="100"/>
+                        <TableColumn fx:id="singleCheckInsCol" text="Single Check-ins" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </content>
+        </ScrollPane>
+
+        <!-- Buttons -->
+        <HBox layoutX="50" layoutY="600" spacing="20">
+            <children>
+                <Button fx:id="addHoursBtn" text="Add Hours" prefWidth="120" onAction="#handleAddHours"/>
+                <Button fx:id="saveBtn" text="Save Report" prefWidth="120" onAction="#handleSaveReport"/>
+                <Button fx:id="finishBtn" text="Finish" prefWidth="120" onAction="#switchToHomeScene"/>
+            </children>
+        </HBox>
+
+    </children>
 </AnchorPane>

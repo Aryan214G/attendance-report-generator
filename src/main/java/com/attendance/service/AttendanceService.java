@@ -37,6 +37,11 @@ public class AttendanceService {
         this.workingDaysInMonth = days;
     }
 
+    public List<ReportRow> getLastGeneratedReport() {
+        return lastGeneratedReport;
+    }
+
+
     // 4. Generate report
     public List<ReportRow> generateReport() {
         if (attendanceList == null || attendanceList.isEmpty()) {

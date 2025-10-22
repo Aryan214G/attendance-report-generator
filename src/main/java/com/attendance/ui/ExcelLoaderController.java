@@ -3,7 +3,11 @@ package com.attendance.ui;
 import com.attendance.service.AttendanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -16,9 +20,9 @@ import java.io.IOException;
 //import static com.attendance.main.App.service;
 
 public class ExcelLoaderController {
-    private final AttendanceService service = new AttendanceService();
+    private final AttendanceService service = AppContext.getAttendanceService();
 
-    MainController mainController = new MainController();
+    SceneSwitcherController sceneSwitcherController = new SceneSwitcherController();
 
     @FXML
     private Rectangle dropRectangle;
@@ -30,7 +34,7 @@ public class ExcelLoaderController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Excel File");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls")
+                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx")
         );
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -39,7 +43,7 @@ public class ExcelLoaderController {
         if (selectedFile != null) {
             fileNameLabel.setText(selectedFile.getName());
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            service.loadExcelFile(selectedFile.getAbsolutePath());
+            AppContext.setSelectedExcelFile(selectedFile);
         } else {
             fileNameLabel.setText("No file selected");
         }
@@ -51,7 +55,7 @@ public class ExcelLoaderController {
         dropRectangle.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
                 File file = event.getDragboard().getFiles().get(0);
-                if (file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls")) {
+                if (file.getName().endsWith(".xlsx")) {
                     event.acceptTransferModes(TransferMode.COPY);
                     // Remove previous success style and add drag-over if not already present
                     dropRectangle.getStyleClass().remove("drop-success");
@@ -69,10 +73,10 @@ public class ExcelLoaderController {
             boolean success = false;
             if (db.hasFiles()) {
                 File file = db.getFiles().get(0);
-                if (file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls")) {
+                if (file.getName().endsWith(".xlsx")) {
                     fileNameLabel.setText(file.getName());
                     System.out.println("Dropped file: " + file.getAbsolutePath());
-                    service.loadExcelFile(file.getAbsolutePath());
+                    AppContext.setSelectedExcelFile(file);
                     success = true;
 
                     // Update visual feedback
@@ -93,21 +97,24 @@ public class ExcelLoaderController {
         });
     }
 
-    @FXML
-    private void switchToHomeScene(ActionEvent event) {
-        try {
-            mainController.switchToHomeScene(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void loadScene(ActionEvent event, String fxmlPath) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
-    private void switchToFormScene(ActionEvent event) {
-        try {
-            mainController.switchToFormScene(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void switchToHomeScene(ActionEvent event) throws IOException {
+        loadScene(event, "/com/attendance/ui/MainView.fxml");
     }
+
+    @FXML
+    public void switchToFormScene(ActionEvent event) throws IOException {
+        loadScene(event, "/com/attendance/ui/FormView.fxml");
+    }
+
 }
