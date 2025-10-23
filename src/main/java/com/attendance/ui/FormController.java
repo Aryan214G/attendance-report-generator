@@ -1,5 +1,6 @@
 package com.attendance.ui;
 
+import com.attendance.model.ReportRow;
 import com.attendance.service.AttendanceService;
 import com.attendance.ui.AppContext;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class FormController {
 
@@ -38,9 +40,16 @@ public class FormController {
         service.loadExcelFile(AppContext.getSelectedExcelFile().getAbsolutePath());
         service.setWorkingDays(workingDays);
         service.setWorkingHours(workingHours);
-        service.generateReport();
+//        service.generateReport();
 
-        AppContext.setReportData(service.getLastGeneratedReport());
+        List<ReportRow> report = service.generateReport();
+        AppContext.setReportData(report);
+        System.out.println("Report rows: " + report.size());
+        for (ReportRow row : report) {
+            System.out.println(row.getEmployeeName());
+        }
+        // Switch to Report Scene
+        switchToReportScene(event);
     }
 
     private void loadScene(ActionEvent event, String fxmlPath) throws IOException {

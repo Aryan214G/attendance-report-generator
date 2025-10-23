@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.FormController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f2c9" height="705.0" layoutX="152.0" layoutY="28.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="705.0" />
-      <Button layoutX="784.0" layoutY="683.0" mnemonicParsing="false" onAction="#switchToReportScene" text="Next">
+      <Button layoutX="784.0" layoutY="683.0" mnemonicParsing="false" onAction="#onNext" text="Next">
          <font>
             <Font size="18.0" />
          </font>
