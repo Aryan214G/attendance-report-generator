@@ -6,26 +6,37 @@ import com.attendance.ui.AppContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class FormController {
+public class FormController implements Initializable {
 
     @FXML
     private TextField monthField, yearField, workingDaysField, workingHoursField;
+
+    @FXML
+    private ChoiceBox<String> monthChoiceBox;
+
+    @FXML
+    private Label defaultHoursLabel;
 
     private final AttendanceService service = AppContext.getAttendanceService();
 
     @FXML
     private void onNext(ActionEvent event) throws IOException {
         // Read user input
-        int month = Integer.parseInt(monthField.getText());
+        String month = monthChoiceBox.getValue();
         int year = Integer.parseInt(yearField.getText());
         int workingDays = Integer.parseInt(workingDaysField.getText());
         double workingHours = 8; //default
@@ -75,5 +86,12 @@ public class FormController {
     }
     public void switchToExcelLoaderSceneFromFormScene(ActionEvent event) throws IOException {
         loadScene(event, "/com/attendance/ui/ExcelLoaderView.fxml");
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        monthChoiceBox.getItems().addAll(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+        );
     }
 }

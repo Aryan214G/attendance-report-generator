@@ -18,7 +18,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
 public class ReportExporter {
 
-    public void saveAs(int option, int month, int year, List<ReportRow> lastGeneratedReport, File file) throws IOException {
+    public void saveAs(int option, String month, int year, List<ReportRow> lastGeneratedReport, File file) throws IOException {
         switch (option) {
             case 1:
                 System.out.println("Save as CSV selected.");
@@ -52,7 +52,7 @@ public class ReportExporter {
             System.out.println("Report saved successfully at: " + file.getAbsolutePath());
         }
 
-    public void saveReportAsPDF(List<ReportRow> lastGeneratedReport, File file, int month, int year) throws IOException {
+    public void saveReportAsPDF(List<ReportRow> lastGeneratedReport, File file, String month, int year) throws IOException {
         if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
             System.out.println("Nothing to save.");
             return;

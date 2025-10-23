@@ -12,6 +12,7 @@ public class ConsoleUI {
     public void start() {
         int choice;
         do {
+            System.out.println(System.getProperty("java.version"));
             System.out.println("\n=== Attendance Report Generator ===");
             System.out.println("1. Load attendance Excel file");
             System.out.println("2. Enter working hours per day");
@@ -55,7 +56,7 @@ public class ConsoleUI {
                 }
                 case 7 -> {
                     System.out.print("Enter month (1-12): ");
-                    int month = sc.nextInt();
+                    String month = sc.nextLine();
                     System.out.print("Enter year (e.g., 2025): ");
                     int year = sc.nextInt();
                     System.out.println("1. Export as CSV\n2. Export as PDF");

@@ -9,7 +9,7 @@ import java.util.List;
 public class AppContext {
     private static final AttendanceService attendanceService = new AttendanceService();
     private static File selectedExcelFile;
-    private static int month;
+    private static String month;
     private static int year;
     private static int workingDays;
     private static double workingHoursPerDay;
@@ -28,11 +28,11 @@ public class AppContext {
         selectedExcelFile = file;
     }
 
-    public static int getMonth() {
+    public static String getMonth() {
         return month;
     }
 
-    public static void setMonth(int m) {
+    public static void setMonth(String m) {
         month = m;
     }
 
@@ -70,7 +70,7 @@ public class AppContext {
 
     public static void reset() {
         selectedExcelFile = null;
-        month = 0;
+        month = "";
         year = 0;
         workingDays = 0;
         workingHoursPerDay = 0;

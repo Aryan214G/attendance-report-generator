@@ -97,7 +97,7 @@ public class AttendanceService {
 
 
     // 7. Save report to CSV
-    public void saveReport(int option, int month, int year) {
+    public void saveReport(int option, String month, int year) {
         if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
             System.out.println("Nothing to save.");
             return;
@@ -117,11 +117,11 @@ public class AttendanceService {
 
             if(option == 1)
             {
-                String fileName = String.format("Attendance_Report_%02d-%d.csv", month, year);
+                String fileName = String.format("Attendance_Report_%s-%d.csv", month, year);
                 File file = new File(dir, fileName);
                 reportExporter.saveAs(option,month, year, lastGeneratedReport, file);
             } else if (option == 2) {
-                String fileName = String.format("Attendance_Report_%02d-%d.pdf", month, year);
+                String fileName = String.format("Attendance_Report_%s-%d.pdf", month, year);
                 File file = new File(dir, fileName);
                 reportExporter.saveAs(option,month, year, lastGeneratedReport, file);
             }
