@@ -5,6 +5,7 @@ import com.attendance.service.AttendanceService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -108,6 +109,37 @@ public class ReportController {
             }
         });
     }
+
+    @FXML
+    private void onPrintReport() {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null && job.showPrintDialog(reportTable.getScene().getWindow())) {
+
+            // Get printable width and height
+            double pageWidth = job.getJobSettings().getPageLayout().getPrintableWidth();
+            double pageHeight = job.getJobSettings().getPageLayout().getPrintableHeight();
+
+            // Scale table to fit page width
+            double scaleX = pageWidth / reportTable.getWidth();
+            double scaleY = pageHeight / reportTable.getHeight();
+            double scale = Math.min(scaleX, scaleY);
+
+            reportTable.getTransforms().add(new javafx.scene.transform.Scale(scale, scale));
+
+            boolean success = job.printPage(reportTable);
+
+            // Remove the scale after printing so UI looks normal
+            reportTable.getTransforms().clear();
+
+            if (success) {
+                job.endJob();
+                System.out.println("Report printed successfully!");
+            } else {
+                System.out.println("Printing failed!");
+            }
+        }
+    }
+
 
     @FXML
     private void switchToHomeScene(ActionEvent event) {
