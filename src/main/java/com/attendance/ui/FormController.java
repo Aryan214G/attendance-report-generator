@@ -28,7 +28,11 @@ public class FormController {
         int month = Integer.parseInt(monthField.getText());
         int year = Integer.parseInt(yearField.getText());
         int workingDays = Integer.parseInt(workingDaysField.getText());
-        double workingHours = Double.parseDouble(workingHoursField.getText());
+        double workingHours = 8; //default
+        if (!workingHoursField.getText().isEmpty())
+        {
+            workingHours = Double.parseDouble(workingHoursField.getText());
+        }
 
         // Save in AppContext
         AppContext.setMonth(month);
@@ -39,7 +43,11 @@ public class FormController {
         // Load Excel and generate report
         service.loadExcelFile(AppContext.getSelectedExcelFile().getAbsolutePath());
         service.setWorkingDays(workingDays);
-        service.setWorkingHours(workingHours);
+        if (!workingHoursField.getText().isEmpty())
+        {
+             service.setWorkingHours(workingHours);
+
+        }
 //        service.generateReport();
 
         List<ReportRow> report = service.generateReport();
