@@ -16,7 +16,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#switchToExcelLoaderScene" text="New file" />
-                  <MenuItem mnemonicParsing="false" text="Open folder" />
+                  <MenuItem fx:id="openFolder" mnemonicParsing="false" onAction="#openFolderWithReports" text="Open folder" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Exit" />
             </items>

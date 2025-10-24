@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 public class MainViewController {
@@ -28,6 +30,24 @@ public class MainViewController {
         scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void openFolderWithReports(ActionEvent event)
+    {
+        String userHome = System.getProperty("user.home");
+        String documentsDir = userHome + File.separator + "Documents";
+        String rootDir = documentsDir + File.separator + "AttendanceReports";
+        try{
+            File reportsDir = new File((rootDir));
+            if(Desktop.isDesktopSupported() && reportsDir.exists()) {
+                Desktop.getDesktop().open(reportsDir);
+            } else {
+                System.out.println("Desktop is not supported or directory does not exist.");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

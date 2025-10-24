@@ -6,8 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.print.PrinterJob;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -110,35 +113,41 @@ public class ReportController {
         });
     }
 
+    // TODO : Fix print blank page issue
     @FXML
     private void onPrintReport() {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job != null && job.showPrintDialog(reportTable.getScene().getWindow())) {
 
-            // Get printable width and height
+            // Create a heading
+            Label heading = new Label("Attendance Report - " + AppContext.getMonth() + " " + AppContext.getYear());
+            heading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+            // VBox for heading + snapshot
+            VBox printContainer = new VBox(10);
+            printContainer.getChildren().add(heading);
+
+            // Take snapshot of the table
+            javafx.scene.image.WritableImage snapshot = reportTable.snapshot(new SnapshotParameters(), null);
+            ImageView tableImage = new ImageView(snapshot);
+            printContainer.getChildren().add(tableImage);
+
+            // Scale to fit page
             double pageWidth = job.getJobSettings().getPageLayout().getPrintableWidth();
             double pageHeight = job.getJobSettings().getPageLayout().getPrintableHeight();
-
-            // Scale table to fit page width
-            double scaleX = pageWidth / reportTable.getWidth();
-            double scaleY = pageHeight / reportTable.getHeight();
+            double scaleX = pageWidth / printContainer.getWidth();
+            double scaleY = pageHeight / printContainer.getHeight();
             double scale = Math.min(scaleX, scaleY);
+            printContainer.getTransforms().add(new javafx.scene.transform.Scale(scale, scale));
 
-            reportTable.getTransforms().add(new javafx.scene.transform.Scale(scale, scale));
+            boolean success = job.printPage(printContainer);
+            printContainer.getTransforms().clear();
 
-            boolean success = job.printPage(reportTable);
-
-            // Remove the scale after printing so UI looks normal
-            reportTable.getTransforms().clear();
-
-            if (success) {
-                job.endJob();
-                System.out.println("Report printed successfully!");
-            } else {
-                System.out.println("Printing failed!");
-            }
+            if (success) job.endJob();
         }
     }
+
+
 
 
     @FXML
