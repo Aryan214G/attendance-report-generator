@@ -93,5 +93,6 @@ public class FormController implements Initializable {
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
         );
+        workingHoursField.setPromptText("Default: 8 hours");
     }
 }
