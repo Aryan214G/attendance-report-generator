@@ -55,6 +55,11 @@ public class ReportController {
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtimeHours"));
         singleCheckInsCol.setCellValueFactory(new PropertyValueFactory<>("singleCheckInDays"));
 
+        formatDoubleColumn(hoursWorkedCol);
+        formatDoubleColumn(hoursAddedCol);
+        formatDoubleColumn(totalHoursCol);
+        formatDoubleColumn(overtimeCol);
+
         // Load report from AppContext
         List<ReportRow> reportData = AppContext.getReportData();
         if (reportData != null) {
@@ -145,6 +150,20 @@ public class ReportController {
 
             if (success) job.endJob();
         }
+    }
+
+    private void formatDoubleColumn(TableColumn<ReportRow, Double> column) {
+        column.setCellFactory(col -> new TableCell<ReportRow, Double>() {
+            @Override
+            protected void updateItem(Double value, boolean empty) {
+                super.updateItem(value, empty);
+                if (empty || value == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.1f", value)); // show 1 decimal place
+                }
+            }
+        });
     }
 
 

@@ -37,7 +37,7 @@ public class ReportExporter {
             try (PrintWriter writer = new PrintWriter(file)) {
                 writer.println("Employee Name,Hours Worked,Hours Added,Total Hours Worked,Days Worked,Working Days,O.T. (hours),Single Check-ins");
                 for (ReportRow row : lastGeneratedReport) {
-                    writer.printf("%s,%.2f,%.2f,%.2f,%d,%d,%.2f,%d%n",
+                    writer.printf("%s,%.1f,%.1f,%.1f,%d,%d,%.1f,%d%n",
                             row.getEmployeeName(),
                             row.getHoursWorked(),
                             row.getHoursAdded(),
