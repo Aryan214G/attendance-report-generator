@@ -19,7 +19,7 @@ public class AttendanceService {
 
     private final ReportGenerator reportGenerator = new ReportGenerator();
     private final ReportExporter reportExporter = new ReportExporter();
-
+    private String rootDirectory;
     // 1. Load Excel
     public void loadExcelFile(String path) {
         AttendanceReader reader = new AttendanceReader();
@@ -39,6 +39,14 @@ public class AttendanceService {
 
     public List<ReportRow> getLastGeneratedReport() {
         return lastGeneratedReport;
+    }
+
+    public void setRootDirectory(String rootDirectory) {
+        this.rootDirectory = rootDirectory;
+    }
+
+    public String getRootDirectory() {
+        return rootDirectory;
     }
 
 
@@ -106,6 +114,7 @@ public class AttendanceService {
             String userHome = System.getProperty("user.home");
             String documentsDir = userHome + File.separator + "Documents";
             String rootDir = documentsDir + File.separator + "AttendanceReports";
+            setRootDirectory(rootDir);
             String csvDir = rootDir + File.separator + "CSVReports";
             String pdfDir = rootDir + File.separator + "PDFReports";
             File csv = new File(csvDir);
