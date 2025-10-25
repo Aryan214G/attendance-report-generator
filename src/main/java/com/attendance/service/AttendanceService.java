@@ -111,10 +111,7 @@ public class AttendanceService {
             return;
         }
         try {
-            String userHome = System.getProperty("user.home");
-            String documentsDir = userHome + File.separator + "Documents";
-            String rootDir = documentsDir + File.separator + "AttendanceReports";
-            setRootDirectory(rootDir);
+            String rootDir = getRootDirectory();
             String csvDir = rootDir + File.separator + "CSVReports";
             String pdfDir = rootDir + File.separator + "PDFReports";
             File csv = new File(csvDir);
@@ -138,5 +135,11 @@ public class AttendanceService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    public void fileDirectoryHelper() {
+        String userHome = System.getProperty("user.home");
+        String documentsDir = userHome + File.separator + "Documents";
+        String rootDir = documentsDir + File.separator + "AttendanceReports";
+        setRootDirectory(rootDir);
     }
 }
