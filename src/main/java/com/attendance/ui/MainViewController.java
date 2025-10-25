@@ -69,10 +69,48 @@ public class MainViewController {
         AppContext.getAttendanceService().fileDirectoryHelper();
         reportsDir = AppContext.getAttendanceService().getRootDirectory();
 
+        hideReportList();
         updateReportList("");
 
         searchField.textProperty().addListener((obs, oldValue, newValue) -> {
-            updateReportList(newValue);
+            if(newValue.isEmpty())
+            {
+                hideReportList();
+            }
+            else{
+                showReportList();
+                updateReportList(newValue);
+
+            }
+        });
+
+        //for opening selected report
+        reportListView.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount() == 2) {
+                String selectedReport = reportListView.getSelectionModel().getSelectedItem();
+                if (selectedReport != null) {
+                    try {
+                        openReport(selectedReport);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        javafx.application.Platform.runLater(() -> {
+            searchField.setOnKeyPressed(event -> {
+                ;
+                switch (event.getCode()) {
+                    case ESCAPE -> hideReportList();
+                }
+            });
+            searchField.getScene().addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+                Node clickedNode = event.getPickResult().getIntersectedNode();
+                if (clickedNode != null && clickedNode != searchField && !isDescendant(reportListView, clickedNode)) {
+                    hideReportList();
+                }
+            });
         });
     }
 
@@ -93,9 +131,45 @@ public class MainViewController {
         }
 
         reportListView.setItems(FXCollections.observableArrayList(allReports));
+
     }
 
+    private void openReport(String selectedReport) throws IOException {
+        String filePath;
+        if(selectedReport.endsWith(".csv"))
+        {
+            filePath = reportsDir + File.separator + "CSVReports"
+                    + File.separator + selectedReport;
+        }
+        else
+        {
+            filePath = reportsDir + File.separator + "PDFReports"
+                    + File.separator + selectedReport;
+        }
 
+        File file = new File(filePath);
+        if(file.exists())
+        {
+            Desktop.getDesktop().open(file);
+        }
+    }
 
+    private void showReportList() {
+        reportListView.setVisible(true);
+        reportListView.setManaged(true);
+    }
+    private void hideReportList() {
+        reportListView.setVisible(false);
+        reportListView.setManaged(false);
+    }
+
+    private boolean isDescendant(Node parent, Node child) {
+        while(child != null)
+        {
+            if(child == parent) return true;
+            child = child.getParent();
+        }
+        return false;
+    }
 }
 

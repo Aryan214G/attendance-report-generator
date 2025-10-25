@@ -27,3 +27,13 @@
     -fx-stroke: #388e3c;
 }
 
+.list-cell:hover {
+    -fx-background-color: #cce5ff;  /* light blue */
+}
+
+.list-cell:selected {
+    -fx-background-color: #3399ff; /* darker blue for selected */
+    -fx-text-fill: white;
+}
+
+
