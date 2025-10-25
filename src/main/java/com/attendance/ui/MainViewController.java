@@ -5,12 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.awt.Desktop;
@@ -22,10 +25,16 @@ import java.util.List;
 
 public class MainViewController {
 
+    private static final long MAX_RECENT_REPORTS = 8;
     @FXML
     private MenuBar menuBar;
     private Stage stage;
     private Scene scene;
+    @FXML
+    private GridPane reportGrid;
+    @FXML
+    private ScrollPane reportScrollPane;
+
 
     @FXML
     private TextField searchField;
@@ -67,6 +76,7 @@ public class MainViewController {
     @FXML
     public void initialize() {
         AppContext.getAttendanceService().fileDirectoryHelper();
+        loadRecentReports();
         reportsDir = AppContext.getAttendanceService().getRootDirectory();
 
         hideReportList();
@@ -112,6 +122,8 @@ public class MainViewController {
                 }
             });
         });
+        
+        loadRecentReports();
     }
 
     private void updateReportList(String filter) {
@@ -153,6 +165,82 @@ public class MainViewController {
             Desktop.getDesktop().open(file);
         }
     }
+
+    private void loadRecentReports() {
+        File csvFolder = new File(reportsDir + "/CSVReports");
+        File pdfFolder = new File(reportsDir + "/PDFReports");
+
+        List<File> recentReports = new ArrayList<>();
+
+        if (csvFolder.exists()) {
+            File[] csvFiles = csvFolder.listFiles();
+            if (csvFiles != null) recentReports.addAll(Arrays.asList(csvFiles));
+        }
+        if (pdfFolder.exists()) {
+            File[] pdfFiles = pdfFolder.listFiles();
+            if (pdfFiles != null) recentReports.addAll(Arrays.asList(pdfFiles));
+        }
+
+        // Sort by last modified (newest first)
+        recentReports.sort((f1, f2) -> Long.compare(f2.lastModified(), f1.lastModified()));
+
+        // Keep only the most recent few
+        recentReports = recentReports.stream()
+                .limit(MAX_RECENT_REPORTS)
+                .toList();
+
+        // Clear any old content
+        reportGrid.getChildren().clear();
+
+        int col = 0, row = 0;
+        for (File report : recentReports) {
+            VBox card = createReportCard(report);
+            reportGrid.add(card, col, row);
+
+            col++;
+            if (col == 4) { // 4 cards per row
+                col = 0;
+                row++;
+            }
+        }
+    }
+
+
+    private VBox createReportCard(File report) {
+        VBox box = new VBox();
+        box.setSpacing(5);
+        box.setAlignment(Pos.CENTER);
+        box.setPrefSize(120, 120);
+        box.getStyleClass().add("report-card");
+
+        Label name = new Label(report.getName());
+        name.setWrapText(true);
+        name.setMaxWidth(100);
+        name.setStyle("-fx-font-size: 12px; -fx-text-alignment: center;");
+
+        // Optional icon
+        Label icon = new Label(report.getName().endsWith(".pdf") ? "📄" : "📊");
+        icon.setStyle("-fx-font-size: 30px;");
+
+        box.getChildren().addAll(icon, name);
+
+        // Click to open
+        box.setOnMouseClicked(e -> {
+            try {
+                Desktop.getDesktop().open(report);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // Hover effect
+        box.setOnMouseEntered(e -> box.setStyle("-fx-background-color: #e6f0ff; -fx-background-radius: 10;"));
+        box.setOnMouseExited(e -> box.setStyle("-fx-background-color: transparent;"));
+
+        return box;
+    }
+
+
 
     private void showReportList() {
         reportListView.setVisible(true);

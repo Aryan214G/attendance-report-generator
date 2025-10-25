@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.MainViewController">
    <children>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="25.0" prefWidth="1923.0">
@@ -41,5 +44,15 @@
       </Label>
       <TextField fx:id="searchField" layoutX="345.0" layoutY="88.0" prefHeight="25.0" prefWidth="413.0" />
       <ListView fx:id="reportListView" layoutX="345.0" layoutY="113.0" prefHeight="201.0" prefWidth="413.0" />
+       <ScrollPane fx:id="reportScrollPane" layoutX="100.0" layoutY="350.0" prefHeight="400.0" prefWidth="800.0" fitToWidth="true" pannable="true">
+           <content>
+               <GridPane fx:id="reportGrid" hgap="20" vgap="20">
+                   <padding>
+                       <Insets top="20" right="20" bottom="20" left="20"/>
+                   </padding>
+               </GridPane>
+
+           </content>
+       </ScrollPane>
    </children>
 </AnchorPane>
