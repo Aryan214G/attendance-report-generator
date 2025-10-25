@@ -6,11 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.print.PrinterJob;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -54,11 +51,6 @@ public class ReportController {
         workingDaysCol.setCellValueFactory(new PropertyValueFactory<>("workingDaysInMonth"));
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtimeHours"));
         singleCheckInsCol.setCellValueFactory(new PropertyValueFactory<>("singleCheckInDays"));
-
-        formatDoubleColumn(hoursWorkedCol);
-        formatDoubleColumn(hoursAddedCol);
-        formatDoubleColumn(totalHoursCol);
-        formatDoubleColumn(overtimeCol);
 
         // Load report from AppContext
         List<ReportRow> reportData = AppContext.getReportData();
@@ -118,55 +110,35 @@ public class ReportController {
         });
     }
 
-    // TODO : Fix print blank page issue
     @FXML
     private void onPrintReport() {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job != null && job.showPrintDialog(reportTable.getScene().getWindow())) {
 
-            // Create a heading
-            Label heading = new Label("Attendance Report - " + AppContext.getMonth() + " " + AppContext.getYear());
-            heading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-            // VBox for heading + snapshot
-            VBox printContainer = new VBox(10);
-            printContainer.getChildren().add(heading);
-
-            // Take snapshot of the table
-            javafx.scene.image.WritableImage snapshot = reportTable.snapshot(new SnapshotParameters(), null);
-            ImageView tableImage = new ImageView(snapshot);
-            printContainer.getChildren().add(tableImage);
-
-            // Scale to fit page
+            // Get printable width and height
             double pageWidth = job.getJobSettings().getPageLayout().getPrintableWidth();
             double pageHeight = job.getJobSettings().getPageLayout().getPrintableHeight();
-            double scaleX = pageWidth / printContainer.getWidth();
-            double scaleY = pageHeight / printContainer.getHeight();
+
+            // Scale table to fit page width
+            double scaleX = pageWidth / reportTable.getWidth();
+            double scaleY = pageHeight / reportTable.getHeight();
             double scale = Math.min(scaleX, scaleY);
-            printContainer.getTransforms().add(new javafx.scene.transform.Scale(scale, scale));
 
-            boolean success = job.printPage(printContainer);
-            printContainer.getTransforms().clear();
+            reportTable.getTransforms().add(new javafx.scene.transform.Scale(scale, scale));
 
-            if (success) job.endJob();
+            boolean success = job.printPage(reportTable);
+
+            // Remove the scale after printing so UI looks normal
+            reportTable.getTransforms().clear();
+
+            if (success) {
+                job.endJob();
+                System.out.println("Report printed successfully!");
+            } else {
+                System.out.println("Printing failed!");
+            }
         }
     }
-
-    private void formatDoubleColumn(TableColumn<ReportRow, Double> column) {
-        column.setCellFactory(col -> new TableCell<ReportRow, Double>() {
-            @Override
-            protected void updateItem(Double value, boolean empty) {
-                super.updateItem(value, empty);
-                if (empty || value == null) {
-                    setText(null);
-                } else {
-                    setText(String.format("%.1f", value)); // show 1 decimal place
-                }
-            }
-        });
-    }
-
-
 
 
     @FXML
