@@ -65,6 +65,7 @@ public class AppContext {
     }
 
     public static void setReportData(List<ReportRow> report) {
+
         reportData = report;
     }
 

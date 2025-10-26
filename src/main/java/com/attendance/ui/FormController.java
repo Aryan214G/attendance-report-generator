@@ -50,15 +50,12 @@ public class FormController implements Initializable {
         AppContext.setYear(year);
         AppContext.setWorkingDays(workingDays);
         AppContext.setWorkingHoursPerDay(workingHours);
-
+//        System.out.println("working hours: "+workingHours);
         // Load Excel and generate report
         service.loadExcelFile(AppContext.getSelectedExcelFile().getAbsolutePath());
         service.setWorkingDays(workingDays);
-        if (!workingHoursField.getText().isEmpty())
-        {
-             service.setWorkingHours(workingHours);
+        service.setWorkingHours(workingHours);
 
-        }
 //        service.generateReport();
 
         List<ReportRow> report = service.generateReport();

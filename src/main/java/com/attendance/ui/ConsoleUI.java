@@ -55,7 +55,7 @@ public class ConsoleUI {
                     attendanceService.addHours(name, extra);
                 }
                 case 7 -> {
-                    System.out.print("Enter month (1-12): ");
+                    System.out.print("Enter month (e.g., January): ");
                     String month = sc.nextLine();
                     System.out.print("Enter year (e.g., 2025): ");
                     int year = sc.nextInt();

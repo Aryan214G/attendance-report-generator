@@ -111,7 +111,8 @@ public class AttendanceService {
             return;
         }
         try {
-            String rootDir = getRootDirectory();
+            fileDirectoryHelper();
+            String rootDir = getRootDirectory(); //TODO: Fix rootDir = null bug
             String csvDir = rootDir + File.separator + "CSVReports";
             String pdfDir = rootDir + File.separator + "PDFReports";
             File csv = new File(csvDir);
