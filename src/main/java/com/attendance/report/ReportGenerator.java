@@ -21,8 +21,8 @@ public class ReportGenerator {
             Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
 
             for (List<String> checkIns : dailyCheckIns.values()) {
-                if (checkIns.isEmpty()) continue;
-                daysWorked++;
+//                if (checkIns.isEmpty()) continue;
+//                daysWorked++;
 
                 if (checkIns.size() == 1) singleCheckIns++;
 
@@ -37,6 +37,7 @@ public class ReportGenerator {
             double expectedHours = workingDaysInMonth * workingHoursPerDay;
             double hoursAdded = 0;
             double totalHoursWorked = totalWorked + hoursAdded;
+            daysWorked = (int) (totalHoursWorked/workingHoursPerDay);
             double overtime = Math.max(0, totalHoursWorked - expectedHours);
 
             double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
