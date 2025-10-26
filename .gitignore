@@ -30,3 +30,14 @@ Thumbs.db
 # Ignore temporary diff and project structure files
 diff.txt
 project_structure.txt
+
+# Ignore generated report files
+/CSVReports/
+/PDFReports/
+
+# In case a null folder was accidentally created
+null/
+
+# Optional: ignore any CSV or PDF reports anywhere
+*.csv
+*.pdf

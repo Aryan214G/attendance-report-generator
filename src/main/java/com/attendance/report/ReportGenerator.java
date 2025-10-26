@@ -27,11 +27,11 @@ public class ReportGenerator {
                 if (checkIns.size() == 1) singleCheckIns++;
 
                 // Pair in/out and sum durations
-                for (int i = 0; i < checkIns.size() - 1; i += 2) {
-                    LocalTime in = LocalTime.parse(checkIns.get(i));
-                    LocalTime out = LocalTime.parse(checkIns.get(i + 1));
+//                for (int i = 0; i < checkIns.size() - 1; i += 2) {
+                    LocalTime in = LocalTime.parse(checkIns.get(0));
+                    LocalTime out = LocalTime.parse(checkIns.get(checkIns.size()-1));
                     totalWorked += Duration.between(in, out).toMinutes() / 60.0;
-                }
+//                }
             }
 
             double expectedHours = workingDaysInMonth * workingHoursPerDay;
