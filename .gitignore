@@ -41,3 +41,5 @@ null/
 # Optional: ignore any CSV or PDF reports anywhere
 *.csv
 *.pdf
+
+src/main/resources/config.properties

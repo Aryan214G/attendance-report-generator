@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import com.attendance.util.PasswordPrompt;
 
 public class ReportController {
 
@@ -61,6 +62,11 @@ public class ReportController {
 
     @FXML
     private void handleAddHours(ActionEvent event) {
+        if (!PasswordPrompt.show()) {
+            showAlert("Incorrect password. Access denied.");
+            return;
+        }
+
         ReportRow selected = reportTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             showAlert("Select an employee first.");
@@ -86,6 +92,10 @@ public class ReportController {
 
     @FXML
     private void handleAddHoursForAll(ActionEvent event) {
+        if (!PasswordPrompt.show()) {
+            showAlert("Incorrect password. Access denied.");
+            return;
+        }
         List<ReportRow> reportData = reportTable.getItems();
         if (reportData == null || reportData.isEmpty()) {
             showAlert("No employees in the report.");
