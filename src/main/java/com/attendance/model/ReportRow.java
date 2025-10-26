@@ -48,4 +48,6 @@ public class ReportRow {
 
     public int getSingleCheckInDays() { return singleCheckInDays; }
     public void setSingleCheckInDays(int singleCheckInDays) { this.singleCheckInDays = singleCheckInDays; }
+
+
 }

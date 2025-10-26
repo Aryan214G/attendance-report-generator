@@ -96,6 +96,16 @@ public class AttendanceService {
                 double newAdded = row.getHoursAdded() + extraHours;
                 row.setHoursAdded(newAdded);
                 row.setTotalHoursWorked(row.getHoursWorked() + newAdded);
+
+                // Recalculate days worked
+                int daysWorked = (int) (row.getTotalHoursWorked()/workingHoursPerDay);
+                row.setDaysWorked(daysWorked);
+
+                // Recalculate overtime
+                double expectedHours = row.getWorkingDaysInMonth() * workingHoursPerDay;
+                double overtime = Math.max(0, row.getTotalHoursWorked() - expectedHours);
+                double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
+                row.setOvertimeHours(overtimeRounded);
                 System.out.println("Added " + extraHours + " hours to " + employeeName);
                 return;
             }
