@@ -39,14 +39,19 @@ public class ReportGenerator {
             double totalHoursWorked = totalWorked + hoursAdded;
             double overtime = Math.max(0, totalHoursWorked - expectedHours);
 
+            double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
+            double hoursAddedRounded = Math.round(hoursAdded * 10.0) / 10.0;
+            double totalHoursWorkedRounded = Math.round(totalHoursWorked * 10.0) / 10.0;
+            double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
+
             ReportRow row = new ReportRow(
                     emp.getEmployeeName(),
-                    totalWorked,
-                    hoursAdded,
-                    totalHoursWorked,
+                    totalWorkedRounded,
+                    hoursAddedRounded,
+                    totalHoursWorkedRounded,
                     daysWorked,
                     workingDaysInMonth,
-                    overtime,
+                    overtimeRounded,
                     singleCheckIns
             );
 
