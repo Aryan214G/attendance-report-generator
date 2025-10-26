@@ -41,6 +41,7 @@
         <HBox layoutX="50" layoutY="600" spacing="20">
             <children>
                 <Button fx:id="addHoursBtn" onAction="#handleAddHours" prefWidth="120" text="Add Hours" />
+            <Button fx:id="addHoursForAll" mnemonicParsing="false" onAction="#handleAddHoursForAll" text="Add hours for all" />
                 <Button fx:id="saveBtn" onAction="#handleSaveReport" prefWidth="120" text="Save Report" />
                 <Button fx:id="finishBtn" onAction="#switchToHomeScene" prefWidth="120" text="Finish" />
             </children>

@@ -113,6 +113,30 @@ public class AttendanceService {
         System.out.println("Employee not found in report.");
     }
 
+    // Add hours to all employees
+    public void addHoursForAll(double extraHours) {
+        if (lastGeneratedReport == null || lastGeneratedReport.isEmpty()) {
+            System.out.println("Generate a report first.");
+            return;
+        }
+
+        for (ReportRow row : lastGeneratedReport) {
+            double newAdded = row.getHoursAdded() + extraHours;
+            row.setHoursAdded(newAdded);
+            row.setTotalHoursWorked(row.getHoursWorked() + newAdded);
+
+            // Recalculate days worked
+            int daysWorked = (int) (row.getTotalHoursWorked()/workingHoursPerDay);
+            row.setDaysWorked(daysWorked);
+
+            // Recalculate overtime
+            double expectedHours = row.getWorkingDaysInMonth() * workingHoursPerDay;
+            double overtime = Math.max(0, row.getTotalHoursWorked() - expectedHours);
+            double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
+            row.setOvertimeHours(overtimeRounded);
+        }
+        System.out.println("Added " + extraHours + " hours to all employees");
+    }
 
     // 7. Save report to CSV
     public void saveReport(int option, String month, int year) {

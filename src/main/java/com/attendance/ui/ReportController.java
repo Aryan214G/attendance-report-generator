@@ -85,6 +85,32 @@ public class ReportController {
     }
 
     @FXML
+    private void handleAddHoursForAll(ActionEvent event) {
+        List<ReportRow> reportData = reportTable.getItems();
+        if (reportData == null || reportData.isEmpty()) {
+            showAlert("No employees in the report.");
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Hours for All");
+        dialog.setHeaderText("Add hours to all employees");
+        dialog.setContentText("Enter number of hours:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(hoursStr -> {
+            try {
+                double hours = Double.parseDouble(hoursStr);
+                service.addHoursForAll(hours);
+                reportTable.refresh();
+                showAlert("Hours added successfully to all employees.");
+            } catch (NumberFormatException e) {
+                showAlert("Invalid number format.");
+            }
+        });
+    }
+
+    @FXML
     private void handleSaveReport(ActionEvent event) {
         List<ReportRow> reportData = AppContext.getReportData();
         if (reportData == null || reportData.isEmpty()) {
