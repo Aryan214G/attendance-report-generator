@@ -1,6 +1,7 @@
 package com.attendance.ui;
 
 import com.attendance.ui.AppContext;
+import com.attendance.util.PasswordPrompt;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -259,5 +260,11 @@ public class MainViewController {
         }
         return false;
     }
+
+    @FXML
+    private void handleChangePassword() {
+        PasswordPrompt.changePassword();
+    }
+
 }
 
