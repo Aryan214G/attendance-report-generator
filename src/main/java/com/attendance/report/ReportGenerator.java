@@ -15,7 +15,7 @@ public class ReportGenerator {
 
         for (EmployeeAttendance emp : employees) {
             double totalWorked = 0;
-            int daysWorked = 0;
+            double daysWorked = 0;
             int singleCheckIns = 0;
 
             Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
@@ -37,20 +37,21 @@ public class ReportGenerator {
             double expectedHours = workingDaysInMonth * workingHoursPerDay;
             double hoursAdded = 0;
             double totalHoursWorked = totalWorked + hoursAdded;
-            daysWorked = (int) (totalHoursWorked/workingHoursPerDay);
+            daysWorked = totalHoursWorked/workingHoursPerDay;
             double overtime = Math.max(0, totalHoursWorked - expectedHours);
 
             double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
             double hoursAddedRounded = Math.round(hoursAdded * 10.0) / 10.0;
             double totalHoursWorkedRounded = Math.round(totalHoursWorked * 10.0) / 10.0;
             double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
+            double daysWorkedRounded = Math.round(daysWorked * 10.0) / 10.0;
 
             ReportRow row = new ReportRow(
                     emp.getEmployeeName(),
                     totalWorkedRounded,
                     hoursAddedRounded,
                     totalHoursWorkedRounded,
-                    daysWorked,
+                    daysWorkedRounded,
                     workingDaysInMonth,
                     overtimeRounded,
                     singleCheckIns

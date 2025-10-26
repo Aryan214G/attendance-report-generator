@@ -72,7 +72,7 @@ public class AttendanceService {
                 "Days Worked", "Working Days", "Overtime", "Single Check-ins");
 
         for (ReportRow row : lastGeneratedReport) {
-            System.out.printf("%-20s %-12.2f %-12.2f %-15.2f %-10d %-10d %-10.2f %-15d%n",
+            System.out.printf("%-20s %-12.2f %-12.2f %-15.2f %-10.2f %-10d %-10.2f %-15d%n",
                     row.getEmployeeName(),
                     row.getHoursWorked(),
                     row.getHoursAdded(),
@@ -98,8 +98,9 @@ public class AttendanceService {
                 row.setTotalHoursWorked(row.getHoursWorked() + newAdded);
 
                 // Recalculate days worked
-                int daysWorked = (int) (row.getTotalHoursWorked()/workingHoursPerDay);
-                row.setDaysWorked(daysWorked);
+                double daysWorked = row.getTotalHoursWorked()/workingHoursPerDay;
+                double daysWorkedRounded = Math.round(daysWorked * 10.0) / 10.0;
+                row.setDaysWorked(daysWorkedRounded);
 
                 // Recalculate overtime
                 double expectedHours = row.getWorkingDaysInMonth() * workingHoursPerDay;
@@ -126,8 +127,9 @@ public class AttendanceService {
             row.setTotalHoursWorked(row.getHoursWorked() + newAdded);
 
             // Recalculate days worked
-            int daysWorked = (int) (row.getTotalHoursWorked()/workingHoursPerDay);
-            row.setDaysWorked(daysWorked);
+            double daysWorked = row.getTotalHoursWorked()/workingHoursPerDay;
+            double daysWorkedRounded = Math.round(daysWorked * 10.0) / 10.0;
+            row.setDaysWorked(daysWorkedRounded);
 
             // Recalculate overtime
             double expectedHours = row.getWorkingDaysInMonth() * workingHoursPerDay;

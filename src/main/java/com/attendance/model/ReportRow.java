@@ -6,14 +6,14 @@ public class ReportRow {
     private double hoursWorked;
     private double hoursAdded;
     private double totalHoursWorked;
-    private int daysWorked;
+    private double daysWorked;
     private int workingDaysInMonth;
     private double overtimeHours;
     private int singleCheckInDays;
 
     // Constructor
     public ReportRow(String employeeName, double hoursWorked, double hoursAdded, double totalHoursWorked,
-                     int daysWorked, int workingDaysInMonth, double overtimeHours, int singleCheckInDays) {
+                     double daysWorked, int workingDaysInMonth, double overtimeHours, int singleCheckInDays) {
         this.employeeName = employeeName;
         this.hoursWorked = hoursWorked;
         this.hoursAdded = hoursAdded;
@@ -37,8 +37,8 @@ public class ReportRow {
     public double getTotalHoursWorked() { return totalHoursWorked; }
     public void setTotalHoursWorked(double totalHoursWorked) { this.totalHoursWorked = totalHoursWorked; }
 
-    public int getDaysWorked() { return daysWorked; }
-    public void setDaysWorked(int daysWorked) { this.daysWorked = daysWorked; }
+    public double getDaysWorked() { return daysWorked; }
+    public void setDaysWorked(double daysWorked) { this.daysWorked = daysWorked; }
 
     public int getWorkingDaysInMonth() { return workingDaysInMonth; }
     public void setWorkingDaysInMonth(int workingDaysInMonth) { this.workingDaysInMonth = workingDaysInMonth; }

@@ -31,7 +31,7 @@ public class ReportController {
     @FXML
     private TableColumn<ReportRow, Double> totalHoursCol;
     @FXML
-    private TableColumn<ReportRow, Integer> daysWorkedCol;
+    private TableColumn<ReportRow, Double> daysWorkedCol;
     @FXML
     private TableColumn<ReportRow, Integer> workingDaysCol;
     @FXML
