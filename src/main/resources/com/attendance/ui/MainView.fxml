@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.geometry.Insets?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.MainViewController">
    <children>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="25.0" prefWidth="1923.0">
@@ -22,20 +22,14 @@
               <MenuItem mnemonicParsing="false" onAction="#switchToExcelLoaderScene" text="New file" />
                   <MenuItem fx:id="openFolder" mnemonicParsing="false" onAction="#openFolderWithReports" text="Open folder" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                    <MenuItem mnemonicParsing="false" text="Change Password" onAction="#handleChangePassword"/>
+                    <MenuItem mnemonicParsing="false" onAction="#handleChangePassword" text="Change Password" />
                 </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
         </menus>
       </MenuBar>
       <Label layoutX="209.0" layoutY="87.0" prefHeight="17.0" prefWidth="123.0" text="Search reports">
@@ -45,11 +39,11 @@
       </Label>
       <TextField fx:id="searchField" layoutX="345.0" layoutY="88.0" prefHeight="25.0" prefWidth="413.0" />
       <ListView fx:id="reportListView" layoutX="345.0" layoutY="113.0" prefHeight="201.0" prefWidth="413.0" />
-       <ScrollPane fx:id="reportScrollPane" layoutX="100.0" layoutY="350.0" prefHeight="400.0" prefWidth="800.0" fitToWidth="true" pannable="true">
+       <ScrollPane fx:id="reportScrollPane" fitToWidth="true" layoutX="100.0" layoutY="350.0" pannable="true" prefHeight="400.0" prefWidth="800.0">
            <content>
                <GridPane fx:id="reportGrid" hgap="20" vgap="20">
                    <padding>
-                       <Insets top="20" right="20" bottom="20" left="20"/>
+                       <Insets bottom="20" left="20" right="20" top="20" />
                    </padding>
                </GridPane>
 

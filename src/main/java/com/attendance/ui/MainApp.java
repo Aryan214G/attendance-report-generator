@@ -19,7 +19,6 @@ public class MainApp extends Application {
         scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.setTitle("Attendance report generator");
-        stage.setFullScreen(true);
 
         Text text = new Text();
         text.setText("Generate report");
