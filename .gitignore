@@ -42,4 +42,17 @@ null/
 *.csv
 *.pdf
 
+# Build artifacts
+target/
+shade/
+installer/
+runtime/
+
+# Maven Shade output
+dependency-reduced-pom.xml
+
+# Executables
+*.exe
+*.jar
+
 src/main/resources/config.properties

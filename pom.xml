@@ -10,10 +10,10 @@
     <name>Attendance Project</name>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>21</javafx.version>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -68,22 +68,70 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>17</release>
-                </configuration>
+                <version>3.11.0</version>
             </plugin>
-
             <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>com.attendance.ui.MainApp</mainClass>
-                </configuration>
+                <version>${javafx.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>create-exe</id>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.attendance.ui.MainApp</mainClass>
+                            <name>Employee Attendance Report Generator</name>
+                            <appVersion>1.0</appVersion>
+                            <vendor>Aryan Jingade</vendor>
+
+                            <!-- Optional: customize -->
+                            <icon>src/main/resources/com/attendance/ui/images/app_icon.ico</icon>
+
+                            <!-- Include your app JAR -->
+                            <runtimeImage>${project.build.directory}/runtime</runtimeImage>
+
+                            <!-- Tell it you want a Windows EXE -->
+                            <installerType>exe</installerType>
+
+                            <!-- This ensures JavaFX + your app are bundled -->
+                            <addModules>javafx.controls,javafx.fxml,javafx.graphics,javafx.base</addModules>
+
+                            <!-- Optional: include jvm args if needed -->
+                            <jvmArgs>--add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED</jvmArgs>
+
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Maven Shade Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>project-classifier</shadedClassifierName>
+                            <outputFile>shade\${project.artifactId}.jar</outputFile>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.attendance.ui.MainApp</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
