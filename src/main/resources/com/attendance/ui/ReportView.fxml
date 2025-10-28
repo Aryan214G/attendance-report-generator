@@ -9,10 +9,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ReportController">
+<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ReportController">
     <children>
 
-        <Label layoutX="400.0" layoutY="40.0" text="Attendance Report">
+        <Label layoutX="300.0" layoutY="40.0" text="Attendance Report" AnchorPane.topAnchor="40.0">
             <font>
                 <Font size="24.0" />
             </font>
@@ -20,9 +20,9 @@
 
 
         <!-- Table inside scroll pane -->
-        <ScrollPane layoutX="50" layoutY="80" prefHeight="500" prefWidth="900">
+        <ScrollPane layoutX="34.0" layoutY="80" prefHeight="500" prefWidth="730.0" AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="34.0" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="80.0">
             <content>
-                <TableView fx:id="reportTable" prefHeight="500" prefWidth="900">
+                <TableView fx:id="reportTable" prefHeight="500" prefWidth="730.0">
                     <columns>
                         <TableColumn fx:id="employeeNameCol" prefWidth="150" text="Employee Name" />
                         <TableColumn fx:id="hoursWorkedCol" prefWidth="100" text="Hours Worked" />
@@ -38,7 +38,7 @@
         </ScrollPane>
 
         <!-- Buttons -->
-        <HBox layoutX="50" layoutY="600" spacing="20">
+        <HBox layoutX="50" layoutY="600" spacing="20" AnchorPane.bottomAnchor="94.66666666666667" AnchorPane.leftAnchor="50.0">
             <children>
                 <Button fx:id="addHoursBtn" onAction="#handleAddHours" prefWidth="120" text="Add Hours" />
             <Button fx:id="addHoursForAll" mnemonicParsing="false" onAction="#handleAddHoursForAll" text="Add hours for all" />
@@ -46,7 +46,7 @@
                 <Button fx:id="finishBtn" onAction="#switchToHomeScene" prefWidth="120" text="Finish" />
             </children>
         </HBox>
-      <Button layoutX="909.0" layoutY="45.0" mnemonicParsing="false" onAction="#onPrintReport" text="Print" />
+      <Button layoutX="800.0" layoutY="45.0" mnemonicParsing="false" onAction="#onPrintReport" text="Print" AnchorPane.rightAnchor="35.0" />
 
     </children>
 </AnchorPane>

@@ -10,9 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ExcelLoaderController">
+<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ExcelLoaderController">
    <children>
-      <Rectangle fx:id="dropRectangle" arcHeight="5.0" arcWidth="5.0" fill="#fdffcd" height="502.0" layoutX="32.0" layoutY="167.0" onDragDropped="#dragDropZone" onDragOver="#dragDropZone" strokeType="INSIDE" strokeWidth="0.0" width="494.0">
+      <Rectangle fx:id="dropRectangle" arcHeight="5.0" arcWidth="5.0" fill="#fdffcd" height="502.0" layoutX="31.0" layoutY="109.0" onDragDropped="#dragDropZone" onDragOver="#dragDropZone" strokeType="INSIDE" strokeWidth="0.0" width="494.0" AnchorPane.bottomAnchor="109.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="108.66666666666663">
          <stroke>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -30,37 +30,37 @@
             </LinearGradient>
          </stroke>
       </Rectangle>
-      <Button fx:id="uploadButton" layoutX="170.0" layoutY="418.0" mnemonicParsing="false" onAction="#handleUploadFile" text="Upload excel files">
+      <Button fx:id="uploadButton" layoutX="169.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleUploadFile" text="Upload excel files" AnchorPane.leftAnchor="168.66666666666666" AnchorPane.rightAnchor="413.66666666666663" AnchorPane.topAnchor="360.0">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <Text layoutX="150.0" layoutY="391.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and drop files here">
+      <Text layoutX="149.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and drop files here" AnchorPane.bottomAnchor="380.9765625" AnchorPane.leftAnchor="149.0" AnchorPane.rightAnchor="393.38151041666663" AnchorPane.topAnchor="307.3333333333333">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Button layoutX="14.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Cancel">
+      <Button layoutX="14.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Cancel" AnchorPane.bottomAnchor="14.666666666666664" AnchorPane.leftAnchor="14.0">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="909.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToFormScene" text="Next">
+      <Button layoutX="909.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToFormScene" text="Next" AnchorPane.bottomAnchor="14.666666666666664" AnchorPane.rightAnchor="29.666666666666664">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Text layoutX="64.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload files">
+      <Text layoutX="64.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload files" AnchorPane.bottomAnchor="649.1171874999999" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="548.107421875" AnchorPane.topAnchor="23.15234375">
          <font>
             <Font size="36.0" />
          </font>
       </Text>
-      <Text layoutX="554.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Uploaded files">
+      <Text layoutX="557.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Uploaded file" AnchorPane.rightAnchor="100.90494791666663" AnchorPane.topAnchor="109.0">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Label fx:id="fileNameLabel" layoutX="554.0" layoutY="236.0" prefWidth="152.0" text="file name">
+      <Label fx:id="fileNameLabel" layoutX="557.0" layoutY="178.0" prefWidth="152.0" text="file name" AnchorPane.rightAnchor="90.66666666666663" AnchorPane.topAnchor="178.0">
          <font>
             <Font size="24.0" />
          </font>

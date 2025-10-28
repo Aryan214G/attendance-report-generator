@@ -8,47 +8,47 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.FormController">
+<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.FormController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f2c9" height="705.0" layoutX="152.0" layoutY="28.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="705.0" />
-      <Button layoutX="784.0" layoutY="683.0" mnemonicParsing="false" onAction="#onNext" text="Next">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f2c9" height="605.0" layoutX="98.0" layoutY="57.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="605.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="97.33333333333326" AnchorPane.rightAnchor="97.0" AnchorPane.topAnchor="56.66666666666663" />
+      <Button layoutX="631.0" layoutY="613.0" mnemonicParsing="false" onAction="#onNext" text="Next" AnchorPane.bottomAnchor="67.66666666666666" AnchorPane.rightAnchor="107.66666666666666">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="714.0" layoutY="683.0" mnemonicParsing="false" onAction="#switchToExcelLoaderSceneFromFormScene" text="Back">
+      <Button layoutX="561.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToExcelLoaderSceneFromFormScene" text="Back" AnchorPane.bottomAnchor="67.3333333333334" AnchorPane.rightAnchor="177.66666666666666">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Text layoutX="162.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working hours per day">
+      <Text layoutX="140.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working hours per day" AnchorPane.bottomAnchor="261.482421875" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="435.7734375">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="workingHoursField" layoutX="162.0" layoutY="444.0" prefHeight="39.0" prefWidth="329.0" />
-      <Text layoutX="515.0" layoutY="433.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working days in a month">
+      <TextField fx:id="workingHoursField" layoutX="140.0" layoutY="464.0" prefHeight="39.0" prefWidth="229.0" AnchorPane.bottomAnchor="216.66666666666666" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="430.66666666666663" />
+      <Text layoutX="416.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter working days in a month" AnchorPane.bottomAnchor="261.482421875" AnchorPane.leftAnchor="415.3333333333333" AnchorPane.rightAnchor="142.0458984375">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="workingDaysField" layoutX="515.0" layoutY="444.0" prefHeight="39.0" prefWidth="329.0" />
-      <Text layoutX="162.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter month">
+      <TextField fx:id="workingDaysField" layoutX="416.0" layoutY="465.0" prefHeight="39.0" prefWidth="229.0" AnchorPane.bottomAnchor="216.6666666666666" AnchorPane.leftAnchor="416.0" AnchorPane.rightAnchor="154.66666666666666" />
+      <Text layoutX="140.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter month" AnchorPane.bottomAnchor="364.482421875" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="303.8951822916667">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <Text layoutX="515.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Year">
+      <Text layoutX="416.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Year" AnchorPane.bottomAnchor="364.482421875" AnchorPane.leftAnchor="415.33333333333337" AnchorPane.rightAnchor="303.228515625">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="yearField" layoutX="515.0" layoutY="340.0" prefHeight="39.0" prefWidth="329.0" />
-      <Text layoutX="313.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter attendance details">
+      <TextField fx:id="yearField" layoutX="416.0" layoutY="361.0" prefHeight="39.0" prefWidth="229.0" AnchorPane.bottomAnchor="319.6666666666667" AnchorPane.leftAnchor="416.0" AnchorPane.rightAnchor="154.66666666666666" />
+      <Text layoutX="155.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter attendance report details" AnchorPane.leftAnchor="155.0" AnchorPane.rightAnchor="154.13151041666663" AnchorPane.topAnchor="158.0">
          <font>
             <Font size="36.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="monthChoiceBox" layoutX="162.0" layoutY="340.0" prefHeight="39.0" prefWidth="329.0" />
+      <ChoiceBox fx:id="monthChoiceBox" layoutX="140.0" layoutY="360.0" prefHeight="39.0" prefWidth="229.0" AnchorPane.bottomAnchor="320.6666666666667" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="430.66666666666663" />
    </children>
 </AnchorPane>
