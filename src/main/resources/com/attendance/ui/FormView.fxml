@@ -8,15 +8,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.FormController">
+<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.FormController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f2c9" height="605.0" layoutX="98.0" layoutY="57.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="605.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="97.33333333333326" AnchorPane.rightAnchor="97.0" AnchorPane.topAnchor="56.66666666666663" />
-      <Button layoutX="631.0" layoutY="613.0" mnemonicParsing="false" onAction="#onNext" text="Next" AnchorPane.bottomAnchor="67.66666666666666" AnchorPane.rightAnchor="107.66666666666666">
+      <Button layoutX="595.0" layoutY="613.0" mnemonicParsing="false" onAction="#onNext" text="Next" AnchorPane.bottomAnchor="67.33333333333326" AnchorPane.rightAnchor="143.89322916666663">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="561.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToExcelLoaderSceneFromFormScene" text="Back" AnchorPane.bottomAnchor="67.3333333333334" AnchorPane.rightAnchor="177.66666666666666">
+      <Button layoutX="525.0" layoutY="613.0" mnemonicParsing="false" onAction="#switchToExcelLoaderSceneFromFormScene" text="Back" AnchorPane.bottomAnchor="67.33333333333326" AnchorPane.rightAnchor="213.89322916666663">
          <font>
             <Font size="18.0" />
          </font>
@@ -44,7 +44,7 @@
          </font>
       </Text>
       <TextField fx:id="yearField" layoutX="416.0" layoutY="361.0" prefHeight="39.0" prefWidth="229.0" AnchorPane.bottomAnchor="319.6666666666667" AnchorPane.leftAnchor="416.0" AnchorPane.rightAnchor="154.66666666666666" />
-      <Text layoutX="155.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter attendance report details" AnchorPane.leftAnchor="155.0" AnchorPane.rightAnchor="154.13151041666663" AnchorPane.topAnchor="158.0">
+      <Text layoutX="155.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading" text="Enter attendance report details" AnchorPane.leftAnchor="155.0" AnchorPane.rightAnchor="154.13151041666663" AnchorPane.topAnchor="158.0">
          <font>
             <Font size="36.0" />
          </font>

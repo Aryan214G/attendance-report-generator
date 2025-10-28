@@ -17,6 +17,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(root);
         String css = this.getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
         scene.getStylesheets().add(css);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Attendance report generator");
 

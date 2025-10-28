@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.MainViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.MainViewController">
    <children>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="25.0" prefWidth="1055.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
         <menus>
@@ -39,7 +39,7 @@
       </Label>
       <TextField fx:id="searchField" layoutX="248.0" layoutY="86.0" prefHeight="25.0" prefWidth="413.0" AnchorPane.leftAnchor="248.0" AnchorPane.rightAnchor="138.66666666666669" AnchorPane.topAnchor="86.0" />
       <ListView fx:id="reportListView" layoutX="248.0" layoutY="111.0" prefHeight="201.0" prefWidth="413.0" AnchorPane.leftAnchor="248.0" AnchorPane.rightAnchor="138.66666666666669" AnchorPane.topAnchor="111.0" />
-       <ScrollPane fx:id="reportScrollPane" fitToWidth="true" layoutX="50.0" layoutY="336.0" pannable="true" prefHeight="350.0" prefWidth="700.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+       <ScrollPane fx:id="reportScrollPane" fitToWidth="true" layoutX="50.0" layoutY="332.33333333333337" pannable="true" prefHeight="350.0" prefWidth="700.0" AnchorPane.bottomAnchor="17.66666666666663" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
            <content>
                <GridPane fx:id="reportGrid" hgap="20" vgap="20">
                    <padding>

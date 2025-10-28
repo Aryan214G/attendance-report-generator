@@ -78,9 +78,7 @@
                 <executions>
                     <execution>
                         <id>create-exe</id>
-                        <goals>
-                            <goal>jpackage</goal>
-                        </goals>
+
                         <configuration>
                             <mainClass>com.attendance.ui.MainApp</mainClass>
                             <name>Employee Attendance Report Generator</name>

@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ExcelLoaderController">
+<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ExcelLoaderController">
    <children>
       <Rectangle fx:id="dropRectangle" arcHeight="5.0" arcWidth="5.0" fill="#fdffcd" height="502.0" layoutX="31.0" layoutY="109.0" onDragDropped="#dragDropZone" onDragOver="#dragDropZone" strokeType="INSIDE" strokeWidth="0.0" width="494.0" AnchorPane.bottomAnchor="109.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="108.66666666666663">
          <stroke>
@@ -40,17 +40,17 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Button layoutX="14.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Cancel" AnchorPane.bottomAnchor="14.666666666666664" AnchorPane.leftAnchor="14.0">
+      <Button layoutX="14.0" layoutY="666.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Cancel" AnchorPane.bottomAnchor="15.216145833333371" AnchorPane.leftAnchor="14.0">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="909.0" layoutY="746.0" mnemonicParsing="false" onAction="#switchToFormScene" text="Next" AnchorPane.bottomAnchor="14.666666666666664" AnchorPane.rightAnchor="29.666666666666664">
+      <Button layoutX="724.0" layoutY="666.0" mnemonicParsing="false" onAction="#switchToFormScene" text="Next" AnchorPane.bottomAnchor="15.216145833333371" AnchorPane.rightAnchor="14.666666666666629">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Text layoutX="64.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload files" AnchorPane.bottomAnchor="649.1171874999999" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="548.107421875" AnchorPane.topAnchor="23.15234375">
+      <Text layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading" text="Upload files" AnchorPane.bottomAnchor="661.5143229166667" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="598.107421875" AnchorPane.topAnchor="11.15234375">
          <font>
             <Font size="36.0" />
          </font>
@@ -60,7 +60,7 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Label fx:id="fileNameLabel" layoutX="557.0" layoutY="178.0" prefWidth="152.0" text="file name" AnchorPane.rightAnchor="90.66666666666663" AnchorPane.topAnchor="178.0">
+      <Label fx:id="fileNameLabel" layoutX="557.0" layoutY="157.0" prefWidth="152.0" text="file name" AnchorPane.rightAnchor="91.0" AnchorPane.topAnchor="157.0">
          <font>
             <Font size="24.0" />
          </font>

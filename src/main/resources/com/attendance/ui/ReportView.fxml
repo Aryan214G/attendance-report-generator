@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ReportController">
+<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.attendance.ui.ReportController">
     <children>
 
-        <Label layoutX="300.0" layoutY="40.0" text="Attendance Report" AnchorPane.topAnchor="40.0">
+        <Label layoutX="250.0" layoutY="26.0" styleClass="heading" text="Attendance Report" AnchorPane.topAnchor="26.0">
             <font>
-                <Font size="24.0" />
+                <Font size="36.0" />
             </font>
         </Label>
 
