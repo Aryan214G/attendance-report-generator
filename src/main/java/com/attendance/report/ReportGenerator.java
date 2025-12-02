@@ -28,10 +28,25 @@ public class ReportGenerator {
 
                 // Pair in/out and sum durations
 //                for (int i = 0; i < checkIns.size() - 1; i += 2) {
-                    LocalTime in = LocalTime.parse(checkIns.get(0));
-                    LocalTime out = LocalTime.parse(checkIns.get(checkIns.size()-1));
-                    totalWorked += Duration.between(in, out).toMinutes() / 60.0;
-//                }
+                //TODO: fix the bug where after day 5 its directly jumping to day 21
+                LocalTime time = LocalTime.parse(checkIns.get(0));
+                if(time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
+                    int i = 1;
+                    while(!LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
+                    {
+                        i++;
+                    }
+                    LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
+                    totalWorked += Duration.between(time, morningCheckout).toMinutes() / 60.0;
+
+                    LocalTime nightIn = LocalTime.parse(checkIns.get(i+1));
+                    LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size()-1));
+                    totalWorked += Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+                    continue;
+                }
+                LocalTime in = LocalTime.parse(checkIns.get(0));
+                LocalTime out = LocalTime.parse(checkIns.get(checkIns.size()-1));
+                totalWorked += Duration.between(in, out).toMinutes() / 60.0;
             }
 
             double expectedHours = workingDaysInMonth * workingHoursPerDay;
