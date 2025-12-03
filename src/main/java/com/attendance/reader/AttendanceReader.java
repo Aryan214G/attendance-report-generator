@@ -24,7 +24,7 @@ public class AttendanceReader {
 
                 String name = row.getCell(1).getStringCellValue(); // 2nd column is name
 
-                Map<Integer, List<String>> dailyCheckIns = new HashMap<>();
+                Map<Integer, List<String>> dailyCheckIns = new TreeMap<>();
 
                 for (int col = 2; col < row.getLastCellNum(); col++) { // columns 3+ are days
                     Cell cell = row.getCell(col);

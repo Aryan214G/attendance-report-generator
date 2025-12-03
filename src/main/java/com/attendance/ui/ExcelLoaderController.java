@@ -29,6 +29,18 @@ public class ExcelLoaderController {
     @FXML
     private Label fileNameLabel;
 
+    boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+    @Override
+    public void initialize() {
+        if (debug) {
+            File testFile = new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx");
+            AppContext.setSelectedExcelFile(testFile);
+            javafx.application.Platform.runLater(() -> {
+                fileNameLabel.setText(testFile.getName());
+                dropRectangle.getStyleClass().add("drop-success");
+            });
+        }
+    }
     @FXML
     private void handleUploadFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
