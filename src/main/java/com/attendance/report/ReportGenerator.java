@@ -46,13 +46,39 @@ public class ReportGenerator {
                 //night shift case
                 LocalTime time = LocalTime.parse(checkIns.get(0));
                 if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
+                    // Case 1: Only 1 or 2 timestamps => NOT a dual shift
+                    if (checkIns.size() < 3) {
+                        double hours = Duration.between(
+                                LocalTime.parse(checkIns.get(0)),
+                                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+                        ).toMinutes() / 60.0;
+
+                        debug("⚠ Only one session (no night return). Counting normally: " + hours);
+                        totalWorked += hours;
+                        continue;
+                    }
                     debug("🌙 Night shift detected — entering dual-session handler");
+
                     int i = 1;
-                    while(!LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
+                    while(i < checkIns.size() && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
                     {
                         debug("Still before 1 AM: " + checkIns.get(i));
                         i++;
                     }
+
+                    // Safety check — avoid out-of-bounds
+                    if (i >= checkIns.size() - 1) {
+                        // no proper second shift
+                        double hours = Duration.between(
+                                LocalTime.parse(checkIns.get(0)),
+                                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+                        ).toMinutes() / 60.0;
+
+                        debug("⚠ Incomplete night shift pattern. Using full session: " + hours);
+                        totalWorked += hours;
+                        continue;
+                    }
+
                     LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
                     double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
                     debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
