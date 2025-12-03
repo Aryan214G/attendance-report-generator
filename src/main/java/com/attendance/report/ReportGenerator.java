@@ -42,7 +42,7 @@ public class ReportGenerator {
                     debug("⚠ Single check-in detected!");
                 }
 
-                //TODO: fix the bug where after day 5 its directly jumping to day 21
+
                 //night shift case
                 LocalTime time = LocalTime.parse(checkIns.get(0));
                 if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
@@ -79,6 +79,16 @@ public class ReportGenerator {
                         continue;
                     }
 
+                    //choose the time closest to noon as morning checkout
+                    LocalTime morningTime = LocalTime.parse(checkIns.get(i));
+                    while(i < checkIns.size() && !morningTime.isAfter(LocalTime.parse("12:00")))
+                    {
+                        debug("Still before noon: " + checkIns.get(i));
+                        i++;
+                        if (i < checkIns.size())
+                            morningTime = LocalTime.parse(checkIns.get(i));
+                    }
+                    i--; //step back to last before noon
                     LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
                     double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
                     debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
