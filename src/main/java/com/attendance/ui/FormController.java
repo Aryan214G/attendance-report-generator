@@ -91,5 +91,22 @@ public class FormController implements Initializable {
                 "July", "August", "September", "October", "November", "December"
         );
         workingHoursField.setPromptText("Default: 8 hours");
+
+        boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean()
+                .getInputArguments().toString().contains("jdwp");
+
+        if (debug) {
+            javafx.application.Platform.runLater(() -> {
+                // Auto-fill the form in DEBUG mode
+                monthChoiceBox.setValue("December");
+                yearField.setText("2025");
+                workingDaysField.setText("25");
+                workingHoursField.setText("8");
+
+                // OPTIONAL:
+                // Automatically press "Next" after filling in values
+                // onNext(null);  // uncomment if you want auto-skip
+            });
+        }
     }
 }
