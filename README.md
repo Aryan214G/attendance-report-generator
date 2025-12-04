@@ -5,6 +5,16 @@ Download the latest version of the Employee Attendance Report Generator from the
 [Releases](https://github.com/Aryan214G/attendance-report-generator/releases) page.
 
 ---
+## 📸 Application Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/home.png" width="230" />
+  <img src="assets/screenshots/upload.png" width="230" />
+  <img src="assets/screenshots/form.png" width="230" />
+  <img src="assets/screenshots/report.png" width="230" />
+</p>
+
+---
 
 ## 📦 Installation Guide
 
