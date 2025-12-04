@@ -4,6 +4,7 @@ import com.attendance.service.AttendanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 //import static com.attendance.main.App.service;
 
-public class ExcelLoaderController {
+public class ExcelLoaderController{
     private final AttendanceService service = AppContext.getAttendanceService();
 
     SceneSwitcherController sceneSwitcherController = new SceneSwitcherController();
@@ -29,6 +30,19 @@ public class ExcelLoaderController {
     @FXML
     private Label fileNameLabel;
 
+
+
+    public void initialize(){
+        boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+        if (debug) {
+            File testFile = new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx");
+            AppContext.setSelectedExcelFile(testFile);
+            javafx.application.Platform.runLater(() -> {
+                fileNameLabel.setText(testFile.getName());
+                dropRectangle.getStyleClass().add("drop-success");
+            });
+        }
+    }
     @FXML
     private void handleUploadFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
