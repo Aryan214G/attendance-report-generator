@@ -30,9 +30,10 @@ public class ExcelLoaderController{
     @FXML
     private Label fileNameLabel;
 
-    boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+
 
     public void initialize(){
+        boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
         if (debug) {
             File testFile = new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx");
             AppContext.setSelectedExcelFile(testFile);
