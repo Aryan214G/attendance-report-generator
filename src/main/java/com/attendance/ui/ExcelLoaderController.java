@@ -4,11 +4,10 @@ import com.attendance.service.AttendanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.ListView;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -17,6 +16,8 @@ import javafx.scene.Node;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 //import static com.attendance.main.App.service;
 
@@ -29,16 +30,18 @@ public class ExcelLoaderController{
     private Rectangle dropRectangle;
     @FXML
     private Label fileNameLabel;
-
-
+    @FXML
+    private ListView<File> filesListView;
 
     public void initialize(){
         boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
         if (debug) {
-            File testFile = new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx");
-            AppContext.setSelectedExcelFile(testFile);
+            List<File> testFile = new ArrayList<>();
+            testFile.add(new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx"));
+            AppContext.setSelectedExcelFiles(testFile);
             javafx.application.Platform.runLater(() -> {
-                fileNameLabel.setText(testFile.getName());
+                //TODO: set multiple file names
+//                fileNameLabel.setText(testFile.getName());
                 dropRectangle.getStyleClass().add("drop-success");
             });
         }
@@ -52,13 +55,18 @@ public class ExcelLoaderController{
         );
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
-        if (selectedFile != null) {
-            fileNameLabel.setText(selectedFile.getName());
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            AppContext.setSelectedExcelFile(selectedFile);
+        if (selectedFiles != null && !selectedFiles.isEmpty()) {
+            filesListView.getItems().addAll(selectedFiles);
+            for(File file : selectedFiles)
+            {
+                System.out.println("Selected file: " + file.getAbsolutePath());
+
+            }
+            AppContext.setSelectedExcelFiles(selectedFiles);
         } else {
+            //TODO: update for multiple files
             fileNameLabel.setText("No file selected");
         }
     }
@@ -90,7 +98,7 @@ public class ExcelLoaderController{
                 if (file.getName().endsWith(".xlsx")) {
                     fileNameLabel.setText(file.getName());
                     System.out.println("Dropped file: " + file.getAbsolutePath());
-                    AppContext.setSelectedExcelFile(file);
+                    AppContext.setSelectedExcelFiles(file);
                     success = true;
 
                     // Update visual feedback

@@ -21,7 +21,7 @@ public class AttendanceService {
     private final ReportExporter reportExporter = new ReportExporter();
     private String rootDirectory;
     // 1. Load Excel
-    public void loadExcelFile(String path) {
+    public void loadExcelFiles(List<File> files) {
         AttendanceReader reader = new AttendanceReader();
         attendanceList = reader.readExcel(path);
         System.out.println("Loaded " + attendanceList.size() + " employee records.");

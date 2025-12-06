@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AppContext {
     private static final AttendanceService attendanceService = new AttendanceService();
-    private static File selectedExcelFile;
+    private static List<File> selectedExcelFile;
     private static String month;
     private static int year;
     private static int workingDays;
@@ -20,12 +20,12 @@ public class AppContext {
         return attendanceService;
     }
 
-    public static File getSelectedExcelFile() {
+    public static List<File> getSelectedExcelFiles() {
         return selectedExcelFile;
     }
 
-    public static void setSelectedExcelFile(File file) {
-        selectedExcelFile = file;
+    public static void setSelectedExcelFiles(List<File> files) {
+        selectedExcelFile = files;
     }
 
     public static String getMonth() {

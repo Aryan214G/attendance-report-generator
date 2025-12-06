@@ -52,7 +52,7 @@ public class FormController implements Initializable {
         AppContext.setWorkingHoursPerDay(workingHours);
 //        System.out.println("working hours: "+workingHours);
         // Load Excel and generate report
-        service.loadExcelFile(AppContext.getSelectedExcelFile().getAbsolutePath());
+        service.loadExcelFile(AppContext.getSelectedExcelFiles().getAbsolutePath());
         service.setWorkingDays(workingDays);
         service.setWorkingHours(workingHours);
 
