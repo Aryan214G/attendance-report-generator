@@ -7,7 +7,10 @@ import com.attendance.report.ReportGenerator;
 import com.attendance.report.ReportExporter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AttendanceService {
 
@@ -23,7 +26,9 @@ public class AttendanceService {
     // 1. Load Excel
     public void loadExcelFiles(List<File> files) {
         AttendanceReader reader = new AttendanceReader();
-        attendanceList = reader.readExcel(path);
+        Map<String, EmployeeAttendance> attendanceMap = new HashMap<>();
+        attendanceMap = reader.readExcel(files);
+        List<EmployeeAttendance> attendanceList = new ArrayList<>(attendanceMap.values());
         System.out.println("Loaded " + attendanceList.size() + " employee records.");
     }
 
