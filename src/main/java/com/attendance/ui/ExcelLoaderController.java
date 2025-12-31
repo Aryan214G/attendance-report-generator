@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javafx.scene.input.Dragboard;
 
 //import static com.attendance.main.App.service;
 
@@ -76,10 +79,14 @@ public class ExcelLoaderController{
         // When a file is dragged over the rectangle
         dropRectangle.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
-                File file = event.getDragboard().getFiles().get(0);
-                if (file.getName().endsWith(".xlsx")) {
+                List<File> files = event.getDragboard().getFiles();
+
+                boolean hasExcel = files.stream()
+                        .anyMatch(file -> file.getName().toLowerCase().endsWith(".xlsx"));
+
+                if (hasExcel) {
                     event.acceptTransferModes(TransferMode.COPY);
-                    // Remove previous success style and add drag-over if not already present
+
                     dropRectangle.getStyleClass().remove("drop-success");
                     if (!dropRectangle.getStyleClass().contains("drag-over")) {
                         dropRectangle.getStyleClass().add("drag-over");
@@ -89,16 +96,33 @@ public class ExcelLoaderController{
             event.consume();
         });
 
+
         // When a file is dropped onto the rectangle
+        // When files are dropped onto the rectangle
         dropRectangle.setOnDragDropped(event -> {
-            var db = event.getDragboard();
+            Dragboard db = event.getDragboard();
             boolean success = false;
+
             if (db.hasFiles()) {
-                File file = db.getFiles().get(0);
-                if (file.getName().endsWith(".xlsx")) {
-                    fileNameLabel.setText(file.getName());
-                    System.out.println("Dropped file: " + file.getAbsolutePath());
-                    AppContext.setSelectedExcelFiles(file);
+                // Filter only Excel files
+                List<File> excelFiles = db.getFiles().stream()
+                        .filter(file -> file.getName().toLowerCase().endsWith(".xlsx"))
+                        .toList();
+
+                if (!excelFiles.isEmpty()) {
+                    // Show all file names in the label
+                    String fileNames = excelFiles.stream()
+                            .map(File::getName)
+                            .collect(Collectors.joining(", "));
+                    fileNameLabel.setText(fileNames);
+
+                    excelFiles.forEach(file ->
+                            System.out.println("Dropped file: " + file.getAbsolutePath())
+                    );
+
+                    // Store in AppContext (LIST, not single file)
+                    AppContext.setSelectedExcelFiles(excelFiles);
+
                     success = true;
 
                     // Update visual feedback
@@ -108,6 +132,7 @@ public class ExcelLoaderController{
                     }
                 }
             }
+
             event.setDropCompleted(success);
             event.consume();
         });
