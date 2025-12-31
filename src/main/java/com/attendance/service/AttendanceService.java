@@ -23,6 +23,8 @@ public class AttendanceService {
     private final ReportGenerator reportGenerator = new ReportGenerator();
     private final ReportExporter reportExporter = new ReportExporter();
     private String rootDirectory;
+
+
     // 1. Load Excel
     public void loadExcelFiles(List<File> files) {
         AttendanceReader reader = new AttendanceReader();
