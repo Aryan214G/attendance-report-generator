@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -18,119 +19,114 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javafx.scene.input.Dragboard;
+public class ExcelLoaderController {
 
-//import static com.attendance.main.App.service;
-
-public class ExcelLoaderController{
     private final AttendanceService service = AppContext.getAttendanceService();
-
-    SceneSwitcherController sceneSwitcherController = new SceneSwitcherController();
+    private final SceneSwitcherController sceneSwitcherController = new SceneSwitcherController();
 
     @FXML
     private Rectangle dropRectangle;
-    @FXML
-    private Label fileNameLabel;
-    @FXML
-    private ListView<File> filesListView;
 
-    public void initialize(){
-        boolean debug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+    @FXML
+    private ListView<String> filesListView;
+
+    // ----------------------------------
+    // Initialization (debug support)
+    // ----------------------------------
+    @FXML
+    public void initialize() {
+        boolean debug = java.lang.management.ManagementFactory
+                .getRuntimeMXBean()
+                .getInputArguments()
+                .toString()
+                .contains("jdwp");
+
         if (debug) {
-            List<File> testFile = new ArrayList<>();
-            testFile.add(new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx"));
-            testFile.add(new File("E:/projects/attendance project files/night shift/dec-ccd.xlsx"));
-            AppContext.setSelectedExcelFiles(testFile);
-            javafx.application.Platform.runLater(() -> {
-                //TODO: set multiple file names
-//                fileNameLabel.setText(testFile.getName());
-                dropRectangle.getStyleClass().add("drop-success");
-            });
+            List<File> testFiles = List.of(
+                    new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx"),
+                    new File("E:/projects/attendance project files/night shift/dec-ccd.xlsx")
+            );
+
+            AppContext.setSelectedExcelFiles(testFiles);
+            filesListView.getItems().setAll(
+                    testFiles.stream().map(File::getName).toList()
+            );
+
+            dropRectangle.getStyleClass().add("drop-success");
         }
     }
+
+    // ----------------------------------
+    // File chooser (multiple selection)
+    // ----------------------------------
     @FXML
     private void handleUploadFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Excel File");
-        fileChooser.getExtensionFilters().addAll(
+        fileChooser.setTitle("Select Excel Files");
+        fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Excel Files", "*.xlsx")
         );
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
 
-        if (selectedFiles != null && !selectedFiles.isEmpty()) {
-            filesListView.getItems().addAll(selectedFiles);
-            for(File file : selectedFiles)
-            {
-                System.out.println("Selected file: " + file.getAbsolutePath());
 
-            }
-            AppContext.setSelectedExcelFiles(selectedFiles);
-        } else {
-            //TODO: update for multiple files
-            fileNameLabel.setText("No file selected");
-        }
+        List<File> excelFiles = filterExcelFiles(selectedFiles);
+
+
+        filesListView.getItems().setAll(
+                excelFiles.stream().map(File::getName).toList()
+        );
+
+        excelFiles.forEach(file ->
+                System.out.println("Selected file: " + file.getAbsolutePath())
+        );
+
+        AppContext.setSelectedExcelFiles(excelFiles);
+        dropRectangle.getStyleClass().add("drop-success");
     }
 
+    // ----------------------------------
+    // Drag & Drop zone
+    // ----------------------------------
     @FXML
     public void dragDropZone() {
-        // When a file is dragged over the rectangle
+
+        // Drag over
         dropRectangle.setOnDragOver(event -> {
-            if (event.getDragboard().hasFiles()) {
-                List<File> files = event.getDragboard().getFiles();
+            List<File> excelFiles = extractExcelFiles(event.getDragboard());
 
-                boolean hasExcel = files.stream()
-                        .anyMatch(file -> file.getName().toLowerCase().endsWith(".xlsx"));
-
-                if (hasExcel) {
-                    event.acceptTransferModes(TransferMode.COPY);
-
-                    dropRectangle.getStyleClass().remove("drop-success");
-                    if (!dropRectangle.getStyleClass().contains("drag-over")) {
-                        dropRectangle.getStyleClass().add("drag-over");
-                    }
+            if (!excelFiles.isEmpty()) {
+                event.acceptTransferModes(TransferMode.COPY);
+                dropRectangle.getStyleClass().remove("drop-success");
+                if (!dropRectangle.getStyleClass().contains("drag-over")) {
+                    dropRectangle.getStyleClass().add("drag-over");
                 }
             }
             event.consume();
         });
 
-
-        // When a file is dropped onto the rectangle
-        // When files are dropped onto the rectangle
+        // Drop
         dropRectangle.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
+            List<File> excelFiles = extractExcelFiles(event.getDragboard());
             boolean success = false;
 
-            if (db.hasFiles()) {
-                // Filter only Excel files
-                List<File> excelFiles = db.getFiles().stream()
-                        .filter(file -> file.getName().toLowerCase().endsWith(".xlsx"))
-                        .toList();
+            if (!excelFiles.isEmpty()) {
+                filesListView.getItems().setAll(
+                        excelFiles.stream().map(File::getName).toList()
+                );
 
-                if (!excelFiles.isEmpty()) {
-                    // Show all file names in the label
-                    String fileNames = excelFiles.stream()
-                            .map(File::getName)
-                            .collect(Collectors.joining(", "));
-                    fileNameLabel.setText(fileNames);
+                excelFiles.forEach(file ->
+                        System.out.println("Dropped file: " + file.getAbsolutePath())
+                );
 
-                    excelFiles.forEach(file ->
-                            System.out.println("Dropped file: " + file.getAbsolutePath())
-                    );
+                AppContext.setSelectedExcelFiles(excelFiles);
+                success = true;
 
-                    // Store in AppContext (LIST, not single file)
-                    AppContext.setSelectedExcelFiles(excelFiles);
-
-                    success = true;
-
-                    // Update visual feedback
-                    dropRectangle.getStyleClass().remove("drag-over");
-                    if (!dropRectangle.getStyleClass().contains("drop-success")) {
-                        dropRectangle.getStyleClass().add("drop-success");
-                    }
+                dropRectangle.getStyleClass().remove("drag-over");
+                if (!dropRectangle.getStyleClass().contains("drop-success")) {
+                    dropRectangle.getStyleClass().add("drop-success");
                 }
             }
 
@@ -138,17 +134,36 @@ public class ExcelLoaderController{
             event.consume();
         });
 
-        // Optional: reset drag-over style if drag exits the rectangle
+        // Drag exit
         dropRectangle.setOnDragExited(event -> {
             dropRectangle.getStyleClass().remove("drag-over");
             event.consume();
         });
     }
 
+    // ----------------------------------
+    // Helpers
+    // ----------------------------------
+    private List<File> extractExcelFiles(Dragboard dragboard) {
+        if (!dragboard.hasFiles()) {
+            return List.of();
+        }
+        return filterExcelFiles(dragboard.getFiles());
+    }
+
+    private List<File> filterExcelFiles(List<File> files) {
+        return files.stream()
+                .filter(file -> file.getName().toLowerCase().endsWith(".xlsx"))
+                .toList();
+    }
+
+    // ----------------------------------
+    // Scene navigation
+    // ----------------------------------
     private void loadScene(ActionEvent event, String fxmlPath) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
         Scene scene = new Scene(root);
-        String css = this.getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
+        String css = getClass().getResource("/com/attendance/ui/styles.css").toExternalForm();
         scene.getStylesheets().add(css);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
@@ -164,5 +179,4 @@ public class ExcelLoaderController{
     public void switchToFormScene(ActionEvent event) throws IOException {
         loadScene(event, "/com/attendance/ui/FormView.fxml");
     }
-
 }
