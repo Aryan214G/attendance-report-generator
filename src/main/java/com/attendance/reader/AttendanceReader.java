@@ -3,6 +3,7 @@ package com.attendance.reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.*;
 
 import org.apache.poi.ss.usermodel.*;
@@ -59,6 +60,10 @@ public class AttendanceReader {
                                     new ArrayList<>(newCheckIns),
                                     (oldList, incomingList) -> {
                                         oldList.addAll(incomingList);
+
+                                        // sort after merge
+                                        oldList.sort(Comparator.comparing(LocalTime::parse));
+
                                         return oldList;
                                     }
                             );
