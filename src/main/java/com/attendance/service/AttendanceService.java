@@ -7,7 +7,7 @@ import com.attendance.report.ReportGenerator;
 import com.attendance.report.ReportExporter;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 public class AttendanceService {
 
@@ -20,10 +20,14 @@ public class AttendanceService {
     private final ReportGenerator reportGenerator = new ReportGenerator();
     private final ReportExporter reportExporter = new ReportExporter();
     private String rootDirectory;
+
+
     // 1. Load Excel
-    public void loadExcelFile(String path) {
+    public void loadExcelFiles(List<File> files) {
         AttendanceReader reader = new AttendanceReader();
-        attendanceList = reader.readExcel(path);
+        Map<String, EmployeeAttendance> attendanceMap = new HashMap<>();
+        attendanceMap = reader.readExcel(files);
+        attendanceList = new ArrayList<>(attendanceMap.values());
         System.out.println("Loaded " + attendanceList.size() + " employee records.");
     }
 
@@ -54,7 +58,7 @@ public class AttendanceService {
     public List<ReportRow> generateReport() {
         if (attendanceList == null || attendanceList.isEmpty()) {
             System.out.println("No attendance data loaded.");
-            return null;
+            return Collections.emptyList();
         }
         lastGeneratedReport = reportGenerator.generateReport(attendanceList, workingDaysInMonth, workingHoursPerDay);
         return lastGeneratedReport;

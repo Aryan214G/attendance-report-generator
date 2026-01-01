@@ -2,7 +2,11 @@ package com.attendance.ui;
 
 import com.attendance.service.AttendanceService;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ConsoleUI {
 
@@ -28,9 +32,16 @@ public class ConsoleUI {
 
             switch (choice) {
                 case 1 -> {
-                    System.out.print("Enter Excel file path: ");
-                    String path = sc.nextLine();
-                    attendanceService.loadExcelFile(path);
+                    System.out.println("Enter comma seperated file paths of excel files: ");
+                    String input = sc.nextLine();
+
+                    List<File> files = Arrays.stream(input.split(","))
+                            .map(String::trim)
+                            .map(File::new)
+                            .collect(Collectors.toList());
+
+                    attendanceService.loadExcelFiles(files);
+
                 }
                 case 2 -> {
                     System.out.print("Enter working hours per day: ");
