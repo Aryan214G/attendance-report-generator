@@ -41,6 +41,7 @@ public class ExcelLoaderController{
         if (debug) {
             List<File> testFile = new ArrayList<>();
             testFile.add(new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx"));
+            testFile.add(new File("E:/projects/attendance project files/night shift/dec-ccd.xlsx"));
             AppContext.setSelectedExcelFiles(testFile);
             javafx.application.Platform.runLater(() -> {
                 //TODO: set multiple file names

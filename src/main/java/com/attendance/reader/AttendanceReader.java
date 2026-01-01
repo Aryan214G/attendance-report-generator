@@ -36,7 +36,7 @@ public class AttendanceReader {
                         String cellValue = cell.getStringCellValue();
 
                         // Split multiple check-ins by line breaks if multiple entries exist
-                        List<String> checkIns = Arrays.asList(cellValue.split("\\n"));
+                        List<String> checkIns = new ArrayList<>(Arrays.asList(cellValue.split("\\n")));
 
                         dailyCheckIns.put(col - 1, checkIns); // day number = column index - 1
                     }

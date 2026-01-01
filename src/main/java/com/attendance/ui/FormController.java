@@ -52,7 +52,7 @@ public class FormController implements Initializable {
         AppContext.setWorkingHoursPerDay(workingHours);
 //        System.out.println("working hours: "+workingHours);
         // Load Excel and generate report
-        service.loadExcelFile(AppContext.getSelectedExcelFiles().getAbsolutePath());
+        service.loadExcelFiles(AppContext.getSelectedExcelFiles());
         service.setWorkingDays(workingDays);
         service.setWorkingHours(workingHours);
 
@@ -98,8 +98,8 @@ public class FormController implements Initializable {
         if (debug) {
             javafx.application.Platform.runLater(() -> {
                 // Auto-fill the form in DEBUG mode
-                monthChoiceBox.setValue("December");
-                yearField.setText("2025");
+                monthChoiceBox.setValue("January");
+                yearField.setText("2026");
                 workingDaysField.setText("25");
                 workingHoursField.setText("8");
 

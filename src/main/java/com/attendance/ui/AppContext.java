@@ -20,9 +20,7 @@ public class AppContext {
         return attendanceService;
     }
 
-    public static List<File> getSelectedExcelFiles() {
-        return selectedExcelFiles;
-    }
+    public static List<File> getSelectedExcelFiles() { return selectedExcelFiles; }
 
     public static void setSelectedExcelFiles(List<File> files) {
         selectedExcelFiles = files;
