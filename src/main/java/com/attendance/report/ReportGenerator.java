@@ -51,6 +51,7 @@ public class ReportGenerator {
                 debug("\nDay " + day + ": " + checkIns);
 
                 // end of debug block
+                //single checkins
                 if (checkIns.size() == 1)
                 {
                     singleCheckIns++;
@@ -60,72 +61,11 @@ public class ReportGenerator {
                 // ========== night shift case ==========
                 // Night shifts are continuous by policy (no unpaid breaks)
                 // Do NOT use paired logic here
-                LocalTime time = LocalTime.parse(checkIns.get(0));
-                if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
-                    // Case 1: Only 1 or 2 timestamps => NOT a dual shift
-                    if (checkIns.size() < 3) {
-                        double hours = Duration.between(
-                                LocalTime.parse(checkIns.get(0)),
-                                LocalTime.parse(checkIns.get(checkIns.size() - 1))
-                        ).toMinutes() / 60.0;
-
-                        debug("⚠ Only one session (no night return). Counting normally: " + hours);
-                        totalWorked += hours;
-                        continue;
-                    }
-                    debug("🌙 Night shift detected — entering dual-session handler");
-
-                    int i = 1;
-                    while(i < checkIns.size() && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
-                    {
-                        debug("Still before 1 AM: " + checkIns.get(i));
-                        i++;
-                    }
-
-                    // Safety check — avoid out-of-bounds
-                    if (i >= checkIns.size() - 1) {
-                        // no proper second shift
-                        double hours = Duration.between(
-                                LocalTime.parse(checkIns.get(0)),
-                                LocalTime.parse(checkIns.get(checkIns.size() - 1))
-                        ).toMinutes() / 60.0;
-
-                        debug("⚠ Incomplete night shift pattern. Using full session: " + hours);
-                        totalWorked += hours;
-                        continue;
-                    }
-
-                    //choose the time closest to noon as morning checkout
-                    LocalTime morningTime = LocalTime.parse(checkIns.get(i));
-                    while(i < checkIns.size() && !morningTime.isAfter(LocalTime.parse("12:00")))
-                    {
-                        debug("Still before noon: " + checkIns.get(i));
-                        i++;
-                        if (i < checkIns.size())
-                            morningTime = LocalTime.parse(checkIns.get(i));
-                    }
-                    i--; //step back to last before noon
-                    LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
-                    double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
-                    debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
-
-                    // If no night session exists after morning
-                    if (i + 1 >= checkIns.size()) {
-                        debug("⚠ No night session after morning. Treating as single continuous shift.");
-                        totalWorked += morningHours;
-                        continue;
-                    }
-
-                    // Safe to calculate night session
-                    LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
-                    LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
-                    double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
-
-                    debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
-                    totalWorked += morningHours + nightHours;
+                Double nightWorked = calculateNightShiftHours(checkIns);
+                if(nightWorked != null) {
+                    totalWorked += nightWorked;
                     continue;
-
-                }
+                } //nigh shift handled, skip to next day
 
                 // ========== normal case ==========
                 double worked = calculatePairedHours(checkIns);
@@ -138,10 +78,79 @@ public class ReportGenerator {
 
             reportHelper(workingDaysInMonth, workingHoursPerDay, totalWorked, emp, singleCheckIns, report);
         }
-
         return report;
     }
 
+    private Double calculateNightShiftHours(List<String> checkIns) {
+
+        LocalTime time = LocalTime.parse(checkIns.get(0));
+        if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
+            // Case 1: Only 1 or 2 timestamps => NOT a dual shift
+            if (checkIns.size() < 3) {
+                double hours = Duration.between(
+                        LocalTime.parse(checkIns.get(0)),
+                        LocalTime.parse(checkIns.get(checkIns.size() - 1))
+                ).toMinutes() / 60.0;
+
+                debug("⚠ Only one session (no night return). Counting normally: " + hours);
+//                totalWorked += hours;
+                return hours;
+            }
+            debug("🌙 Night shift detected — entering dual-session handler");
+
+            int i = 1;
+            while(i < checkIns.size() && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
+            {
+                debug("Still before 1 AM: " + checkIns.get(i));
+                i++;
+            }
+
+            // Safety check — avoid out-of-bounds
+            if (i >= checkIns.size() - 1) {
+                // no proper second shift
+                double hours = Duration.between(
+                        LocalTime.parse(checkIns.get(0)),
+                        LocalTime.parse(checkIns.get(checkIns.size() - 1))
+                ).toMinutes() / 60.0;
+
+                debug("⚠ Incomplete night shift pattern. Using full session: " + hours);
+//                totalWorked += hours;
+                return hours;
+            }
+
+            //choose the time closest to noon as morning checkout
+            LocalTime morningTime = LocalTime.parse(checkIns.get(i));
+            while(i < checkIns.size() && !morningTime.isAfter(LocalTime.parse("12:00")))
+            {
+                debug("Still before noon: " + checkIns.get(i));
+                i++;
+                if (i < checkIns.size())
+                    morningTime = LocalTime.parse(checkIns.get(i));
+            }
+            i--; //step back to last before noon
+            LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
+            double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
+            debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
+
+            // If no night session exists after morning
+            if (i + 1 >= checkIns.size()) {
+                debug("⚠ No night session after morning. Treating as single continuous shift.");
+//                totalWorked += morningHours;
+                return morningHours;
+            }
+
+            // Safe to calculate night session
+            LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
+            LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
+            double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+
+            debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
+//            totalWorked += morningHours + nightHours;
+            return morningHours + nightHours;
+
+        }
+        return null;
+    }
     private void reportHelper(int workingDaysInMonth, double workingHoursPerDay, double totalWorked, EmployeeAttendance emp, int singleCheckIns, List<ReportRow> report) {
         double expectedHours = workingDaysInMonth * workingHoursPerDay;
         double hoursAdded = 0;
