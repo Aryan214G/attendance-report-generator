@@ -26,15 +26,14 @@ public class ReportGenerator {
 
             Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
 
-            for (List<String> checkIns : dailyCheckIns.values()) {
+            for (Map.Entry<Integer, List<String>> entry : dailyCheckIns.entrySet()) {
 
-                // Start of debug block
-                int day = dailyCheckIns.entrySet().stream()
-                        .filter(entry -> entry.getValue().equals(checkIns))
-                        .map(Map.Entry::getKey)
-                        .findFirst()
-                        .orElse(-1);
+                int day = entry.getKey();
+                List<String> checkIns = entry.getValue();
+
                 debug("\nDay " + day + ": " + checkIns);
+
+
                 // end of debug block
                 if (checkIns.size() == 1)
                 {
@@ -93,13 +92,22 @@ public class ReportGenerator {
                     double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
                     debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
 
-                    LocalTime nightIn = LocalTime.parse(checkIns.get(i+1));
-                    LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size()-1));
-                    double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
-                    debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
+                    // If no night session exists after morning
+                    if (i + 1 >= checkIns.size()) {
+                        debug("⚠ No night session after morning. Treating as single continuous shift.");
+                        totalWorked += morningHours;
+                        continue;
+                    }
 
+                    // Safe to calculate night session
+                    LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
+                    LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
+                    double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+
+                    debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
                     totalWorked += morningHours + nightHours;
                     continue;
+
                 }
 
                 //normal case
