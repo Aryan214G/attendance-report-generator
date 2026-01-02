@@ -38,20 +38,17 @@ public class ReportGenerator {
 
         for (EmployeeAttendance emp : employees) {
             double totalWorked = 0;
-            double daysWorked = 0;
+//            double daysWorked = 0;
             int singleCheckIns = 0;
+            Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
 
             debug("========== " + emp.getEmployeeName() + " ==========");
 
-            Map<Integer, List<String>> dailyCheckIns = emp.getDailyCheckIns();
-
             for (Map.Entry<Integer, List<String>> entry : dailyCheckIns.entrySet()) {
-
                 int day = entry.getKey();
                 List<String> checkIns = entry.getValue();
 
                 debug("\nDay " + day + ": " + checkIns);
-
 
                 // end of debug block
                 if (checkIns.size() == 1)
@@ -60,11 +57,9 @@ public class ReportGenerator {
                     debug("⚠ Single check-in detected!");
                 }
 
-
                 // ========== night shift case ==========
                 // Night shifts are continuous by policy (no unpaid breaks)
                 // Do NOT use paired logic here
-
                 LocalTime time = LocalTime.parse(checkIns.get(0));
                 if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
                     // Case 1: Only 1 or 2 timestamps => NOT a dual shift
@@ -141,32 +136,36 @@ public class ReportGenerator {
             debug("\nTOTAL WORKED (raw): " + totalWorked);
             debug("============================================\n");
 
-            double expectedHours = workingDaysInMonth * workingHoursPerDay;
-            double hoursAdded = 0;
-            double totalHoursWorked = totalWorked + hoursAdded;
-            daysWorked = totalHoursWorked/workingHoursPerDay;
-            double overtime = Math.max(0, totalHoursWorked - expectedHours);
-
-            double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
-            double hoursAddedRounded = Math.round(hoursAdded * 10.0) / 10.0;
-            double totalHoursWorkedRounded = Math.round(totalHoursWorked * 10.0) / 10.0;
-            double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
-            double daysWorkedRounded = Math.round(daysWorked * 10.0) / 10.0;
-
-            ReportRow row = new ReportRow(
-                    emp.getEmployeeName(),
-                    totalWorkedRounded,
-                    hoursAddedRounded,
-                    totalHoursWorkedRounded,
-                    daysWorkedRounded,
-                    workingDaysInMonth,
-                    overtimeRounded,
-                    singleCheckIns
-            );
-
-            report.add(row);
+            reportHelper(workingDaysInMonth, workingHoursPerDay, totalWorked, emp, singleCheckIns, report);
         }
 
         return report;
+    }
+
+    private void reportHelper(int workingDaysInMonth, double workingHoursPerDay, double totalWorked, EmployeeAttendance emp, int singleCheckIns, List<ReportRow> report) {
+        double expectedHours = workingDaysInMonth * workingHoursPerDay;
+        double hoursAdded = 0;
+        double totalHoursWorked = totalWorked + hoursAdded;
+        double daysWorked = totalHoursWorked/workingHoursPerDay;
+        double overtime = Math.max(0, totalHoursWorked - expectedHours);
+
+        double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
+        double hoursAddedRounded = Math.round(hoursAdded * 10.0) / 10.0;
+        double totalHoursWorkedRounded = Math.round(totalHoursWorked * 10.0) / 10.0;
+        double overtimeRounded = Math.round(overtime * 10.0) / 10.0;
+        double daysWorkedRounded = Math.round(daysWorked * 10.0) / 10.0;
+
+        ReportRow row = new ReportRow(
+                emp.getEmployeeName(),
+                totalWorkedRounded,
+                hoursAddedRounded,
+                totalHoursWorkedRounded,
+                daysWorkedRounded,
+                workingDaysInMonth,
+                overtimeRounded,
+                singleCheckIns
+        );
+
+        report.add(row);
     }
 }
