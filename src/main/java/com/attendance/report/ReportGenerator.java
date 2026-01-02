@@ -14,6 +14,25 @@ public class ReportGenerator {
         if (DEBUG) System.out.println(msg);
     }
 
+    //for breaks during day
+    private double calculatePairedHours(List<String> checkIns) {
+        double hours = 0;
+
+        for (int i = 0; i + 1 < checkIns.size(); i += 2) {
+            LocalTime in = LocalTime.parse(checkIns.get(i));
+            LocalTime out = LocalTime.parse(checkIns.get(i + 1));
+
+            if (out.isBefore(in)) {
+                // defensive check
+                continue;
+            }
+
+            hours += Duration.between(in, out).toMinutes() / 60.0;
+        }
+
+        return hours;
+    }
+
     public List<ReportRow> generateReport(List<EmployeeAttendance> employees, int workingDaysInMonth, double workingHoursPerDay) {
         List<ReportRow> report = new ArrayList<>();
 
@@ -42,7 +61,10 @@ public class ReportGenerator {
                 }
 
 
-                //night shift case
+                // ========== night shift case ==========
+                // Night shifts are continuous by policy (no unpaid breaks)
+                // Do NOT use paired logic here
+
                 LocalTime time = LocalTime.parse(checkIns.get(0));
                 if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
                     // Case 1: Only 1 or 2 timestamps => NOT a dual shift
@@ -110,15 +132,12 @@ public class ReportGenerator {
 
                 }
 
-                //normal case
-                LocalTime in = LocalTime.parse(checkIns.get(0));
-                LocalTime out = LocalTime.parse(checkIns.get(checkIns.size()-1));
-                double worked = Duration.between(in, out).toMinutes() / 60.0;
-
-                debug("🕘 Normal session: " + in + " → " + out + " = " + worked);
-
+                // ========== normal case ==========
+                double worked = calculatePairedHours(checkIns);
+                debug("🕘 Paired sessions total = " + worked);
                 totalWorked += worked;
             }
+
             debug("\nTOTAL WORKED (raw): " + totalWorked);
             debug("============================================\n");
 
