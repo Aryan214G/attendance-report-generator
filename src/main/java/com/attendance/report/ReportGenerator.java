@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ReportGenerator {
     private static final boolean DEBUG = true; // turn off later if needed
+
     private void debug(String msg) {
         if (DEBUG) System.out.println(msg);
     }
@@ -27,7 +28,7 @@ public class ReportGenerator {
                 continue;
             }
 
-            debug( "Session: " + in + " → " + out + " = " + (Duration.between(in, out).toMinutes() / 60.0) );
+            debug("Session: " + in + " → " + out + " = " + (Duration.between(in, out).toMinutes() / 60.0));
             hours += Duration.between(in, out).toMinutes() / 60.0;
         }
 
@@ -53,8 +54,7 @@ public class ReportGenerator {
 
                 // end of debug block
                 //single checkins
-                if (checkIns.size() == 1)
-                {
+                if (checkIns.size() == 1) {
                     singleCheckIns++;
                     debug("⚠ Single check-in detected!");
                 }
@@ -62,8 +62,8 @@ public class ReportGenerator {
                 // ========== night shift case ==========
                 // Night shifts are continuous by policy (no unpaid breaks)
                 // Do NOT use paired logic here
-                Double nightWorked = calculateNightShiftHours(checkIns);
-                if(nightWorked != null) {
+                Double nightWorked = calculateNightShiftHours(checkIns, day, dailyCheckIns);
+                if (nightWorked != null) {
                     totalWorked += nightWorked;
                     continue;
                 } //nigh shift handled, skip to next day
@@ -82,84 +82,164 @@ public class ReportGenerator {
         return report;
     }
 
-    private Double calculateNightShiftHours(List<String> checkIns) {
+    private Double calculateNightShiftHours(List<String> checkIns, int day, Map<Integer, List<String>> dailyCheckIns) {
+        int prevDay = day - 1;
+        // Check if previous day has check-ins
+        if (!dailyCheckIns.containsKey(prevDay)) {
+            return null;
+        }
 
+        // Get last check-in of previous day
+        List<String> prevDayCheckIns = dailyCheckIns.get(prevDay);
+        LocalTime lastPrevDayTime = LocalTime.parse(prevDayCheckIns.get(prevDayCheckIns.size() - 1));
+
+        // Check if current day's first check-in is between 00:00 and 01:00 or previous day's last check-in after 23:30
         LocalTime time = LocalTime.parse(checkIns.get(0));
-        if(time.equals(LocalTime.parse("00:00"))
+        if (time.equals(LocalTime.parse("00:00"))
                 || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))
-                || time.isAfter(LocalTime.parse("23:30")) && time.isBefore(LocalTime.parse("00:00"))) {
+                || lastPrevDayTime.isAfter(LocalTime.parse("23:30")))
+        {
+
+            //Stepping back to find night shift start
+            LocalTime nightStart = findNightShiftStart(checkIns, prevDayCheckIns);
+            debug("🌙 Night shift start detected at: " + nightStart);
+
             // Case 1: Only 1 or 2 timestamps => NOT a dual shift
             if (checkIns.size() < 3) {
-                double hours = Duration.between(
-                        LocalTime.parse(checkIns.get(0)),
-                        LocalTime.parse(checkIns.get(checkIns.size() - 1))
-                ).toMinutes() / 60.0;
-
-                debug("⚠ Only one session (no night return). Counting normally: " + hours);
-//                totalWorked += hours;
+                double hours = nonDualShift(nightStart, checkIns);
                 return hours;
             }
+
             debug("🌙 Night shift detected — entering dual-session handler");
 
             // Find the first time AFTER 1 AM
-            int i = 1;
-            while(i < checkIns.size() && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
-            {
-                debug("Still before 1 AM: " + checkIns.get(i));
-                i++;
-            }
+            int i = findFirstAfterOneAM(checkIns, nightStart);
 
             // Safety check — avoid out-of-bounds
             if (i >= checkIns.size() - 1) {
                 // no proper second shift
-                double hours = Duration.between(
-                        LocalTime.parse(checkIns.get(0)),
-                        LocalTime.parse(checkIns.get(checkIns.size() - 1))
-                ).toMinutes() / 60.0;
-
-                debug("⚠ Incomplete night shift pattern. Using full session: " + hours);
-//                totalWorked += hours;
+                double hours = outOfBoundsHandler(nightStart, checkIns);
                 return hours;
             }
 
             //choose the time closest to noon as morning checkout
-            LocalTime morningTime = LocalTime.parse(checkIns.get(i));
-            while(i < checkIns.size() && !morningTime.isAfter(LocalTime.parse("12:00")))
-            {
-                debug("Still before noon: " + checkIns.get(i));
-                i++;
-                if (i < checkIns.size())
-                    morningTime = LocalTime.parse(checkIns.get(i));
-            }
-            i--; //step back to last before noon
-            LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
-            double morningHours = Duration.between(time, morningCheckout).toMinutes() / 60.0;
-            debug("Morning session: " + time + " → " + morningCheckout + " = " + morningHours);
+            MorningCheckoutResult result = findMorningCheckout(i, checkIns);
+            i = result.getIndex();
+            LocalTime morningCheckout = result.getTime();
 
-            // If no night session exists after morning
-            if (i + 1 >= checkIns.size()) {
-                debug("⚠ No night session after morning. Treating as single continuous shift.");
-//                totalWorked += morningHours;
-                return morningHours;
-            }
+            // Calculate night session hours
+            double nightHours = calculateHoursTillMidnight(nightStart, checkIns);
 
-            // Safe to calculate night session
-            LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
-            LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
-            double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+                // Calculate morning session hours
+                double morningHours = 0;
+                morningHours = Duration.between(
+                        LocalTime.MIDNIGHT,
+                        morningCheckout
+                ).toMinutes() / 60.0;
 
-            debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
+                debug("Morning session: 00:00 → " + morningCheckout + " = " + morningHours);
+
+                // If no night session exists after morning
+                if (i + 1 >= checkIns.size()) {
+                    debug("⚠ No night session after morning. Treating as single continuous shift.");
+                    return morningHours + nightHours;
+                }
+
+                // Safe to calculate night session
+                LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
+                LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
+                if (nightOut.isBefore(LocalTime.parse("23:30"))) {
+                    debug("⚠ Night checkout before 23:30 — invalid night shift pattern. Treating as single continuous shift.");
+                    return morningHours;
+                }
+                double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+                debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
 //            totalWorked += morningHours + nightHours;
-            return morningHours + nightHours;
-
+                return morningHours + nightHours;
+            }
+            return null;
         }
-        return null;
+
     }
+
+    private double nonDualShift (LocalTime nightStart, List<String> checkIns) {
+        double hours = calculateHoursTillMidnight(nightStart, checkIns);
+        hours += Duration.between(
+                LocalTime.MIDNIGHT,
+                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+        ).toMinutes() / 60.0;
+
+        debug("⚠ Only one session (no night return). Counting normally: \n" +
+                "Morning session: " + nightStart + " → " + checkIns.get(checkIns.size() - 1) + " = " + hours);
+        return hours;
+    }
+
+    private int findFirstAfterOneAM(List<String> checkIns, LocalTime nightStart) {
+        int i = 1;
+        while (i < checkIns.size()
+                && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00"))) {
+            debug("Still before 1 AM: " + checkIns.get(i));
+            i++;
+        }
+        return i;
+    }
+
+    private double calculateHoursTillMidnight(LocalTime nightStart, List<String> checkIns) {
+        double hours = 0;
+        if (nightStart.isBefore(LocalTime.MIDNIGHT)) {
+            hours = Duration.between(
+                    nightStart,
+                    LocalTime.MAX.plusNanos(1) // to include midnight as 24:00 and not 00:00
+            ).toMinutes() / 60.0;
+        }
+        return hours;
+    }
+
+    private LocalTime findNightShiftStart(List<String> checkIns, List<String> prevDayCheckIns) {
+        LocalTime nightStart;
+        int j = prevDayCheckIns.size() - 1;
+        while (j > 0 && LocalTime.parse(prevDayCheckIns.get(j)).isAfter(LocalTime.parse("23:30"))) {
+            debug("Stepping back to find night shift start: " + prevDayCheckIns.get(j));
+            j--;
+        }
+        nightStart = LocalTime.parse(prevDayCheckIns.get(j));
+        return nightStart;
+    }
+
+    private double outOfBoundsHandler(LocalTime nightStart, List<String> checkIns) {
+        double hours = calculateHoursTillMidnight(nightStart, checkIns);
+
+        // Add morning session
+        hours += Duration.between(
+                LocalTime.MIDNIGHT,
+                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+        ).toMinutes() / 60.0;
+
+        debug("⚠ Incomplete night shift pattern. Using full session: " + nightStart + " -> "
+                + checkIns.get(checkIns.size() - 1) + " = "
+                + hours);
+        return hours;
+    }
+
+    private MorningCheckoutResult findMorningCheckout(int i, List<String> checkIns) {
+        LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
+        while (i < checkIns.size() && !morningCheckout.isAfter(LocalTime.parse("12:00"))) {
+            debug("Still before noon: " + checkIns.get(i));
+            i++;
+            if (i < checkIns.size())
+                morningCheckout = LocalTime.parse(checkIns.get(i));
+        }
+        i--; //step back to last before noon
+        morningCheckout = LocalTime.parse(checkIns.get(i));
+
+        return new MorningCheckoutResult(i, morningCheckout);
+    }
+
     private void reportHelper(int workingDaysInMonth, double workingHoursPerDay, double totalWorked, EmployeeAttendance emp, int singleCheckIns, List<ReportRow> report) {
         double expectedHours = workingDaysInMonth * workingHoursPerDay;
         double hoursAdded = 0;
         double totalHoursWorked = totalWorked + hoursAdded;
-        double daysWorked = totalHoursWorked/workingHoursPerDay;
+        double daysWorked = totalHoursWorked / workingHoursPerDay;
         double overtime = Math.max(0, totalHoursWorked - expectedHours);
 
         double totalWorkedRounded = Math.round(totalWorked * 10.0) / 10.0;
