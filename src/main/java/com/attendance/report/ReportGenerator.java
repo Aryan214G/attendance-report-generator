@@ -152,16 +152,13 @@ public class ReportGenerator {
                     debug("⚠ Night checkout before 23:30 — invalid night shift pattern. Treating as single continuous shift.");
                     return morningHours;
                 }
-                double nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
+                nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
                 debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
 //            totalWorked += morningHours + nightHours;
                 return morningHours + nightHours;
             }
             return null;
         }
-
-    }
-
     private double nonDualShift (LocalTime nightStart, List<String> checkIns) {
         double hours = calculateHoursTillMidnight(nightStart, checkIns);
         hours += Duration.between(
@@ -261,4 +258,6 @@ public class ReportGenerator {
 
         report.add(row);
     }
+
 }
+

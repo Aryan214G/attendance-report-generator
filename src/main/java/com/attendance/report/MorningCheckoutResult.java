@@ -14,4 +14,4 @@ public class MorningCheckoutResult {
     public int getIndex() { return index; }
     public LocalTime getTime() { return time; }
 }
-s
+
