@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>22</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>21</javafx.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     </properties>
@@ -70,10 +70,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <release>22</release>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
+                    <release>17</release>
                 </configuration>
             </plugin>
 

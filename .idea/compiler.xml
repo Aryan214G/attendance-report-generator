@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="attendanceProject" options="--enable-preview" />
+      <module name="attendanceProject" options="" />
     </option>
   </component>
 </project>
