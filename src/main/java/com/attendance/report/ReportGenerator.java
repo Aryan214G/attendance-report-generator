@@ -27,6 +27,7 @@ public class ReportGenerator {
                 continue;
             }
 
+            debug( "Session: " + in + " → " + out + " = " + (Duration.between(in, out).toMinutes() / 60.0) );
             hours += Duration.between(in, out).toMinutes() / 60.0;
         }
 
@@ -84,7 +85,9 @@ public class ReportGenerator {
     private Double calculateNightShiftHours(List<String> checkIns) {
 
         LocalTime time = LocalTime.parse(checkIns.get(0));
-        if(time.equals(LocalTime.parse("00:00")) || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))){
+        if(time.equals(LocalTime.parse("00:00"))
+                || time.isAfter(LocalTime.parse("00:00")) && time.isBefore(LocalTime.parse("01:00"))
+                || time.isAfter(LocalTime.parse("23:30")) && time.isBefore(LocalTime.parse("00:00"))) {
             // Case 1: Only 1 or 2 timestamps => NOT a dual shift
             if (checkIns.size() < 3) {
                 double hours = Duration.between(
@@ -98,6 +101,7 @@ public class ReportGenerator {
             }
             debug("🌙 Night shift detected — entering dual-session handler");
 
+            // Find the first time AFTER 1 AM
             int i = 1;
             while(i < checkIns.size() && !LocalTime.parse(checkIns.get(i)).isAfter(LocalTime.parse("01:00")))
             {
