@@ -55,8 +55,9 @@ public class ReportGenerator {
 
                 //case 1: no night shift next day
                 if(!nightShiftExists(checkIns, day, dailyCheckIns)) {
-                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
-                    debug( "☀ Day shift detected: " + dayShiftStart + " → " + checkIns.get(checkIns.size() - 1) + " = " + dayWorked);
+                    LocalTime dayEnd = LocalTime.parse(checkIns.get(checkIns.size() - 1));
+                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns, dayEnd);
+                    debug( "☀ Day shift detected: " + dayShiftStart + " → " + dayEnd + " = " + dayWorked);
                 }
                 //case 2: night shift next day
                 else {
@@ -66,7 +67,7 @@ public class ReportGenerator {
                         index--;
                     }
                     LocalTime dayEnd = LocalTime.parse(checkIns.get(index));
-                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
+                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns, dayEnd);
                     debug( "☀ Day shift with night return detected: " + dayShiftStart + " → " + dayEnd + " = " + dayWorked);
                 }
                 totalWorked += dayWorked;
@@ -153,8 +154,9 @@ public class ReportGenerator {
                     return morningHours + nightHours;
                 }
                 // Calculate day session hours
-                double dayshiftHours = calculateDayshiftHours(dayShiftStart, checkIns);
-                debug("Day session: " + dayShiftStart + " → " + checkIns.get(checkIns.size() - 1) + " = " + dayshiftHours);
+                LocalTime dayEnd = LocalTime.parse(checkIns.get(checkIns.size() - 1));
+                double dayshiftHours = calculateDayshiftHours(dayShiftStart, checkIns, dayEnd);
+                debug("Day session: " + dayShiftStart + " → " + dayEnd + " = " + dayshiftHours);
 
                 return morningHours + nightHours + dayshiftHours;
             }
@@ -202,10 +204,10 @@ public class ReportGenerator {
         return morningHours;
     }
 
-    private double calculateDayshiftHours(LocalTime dayShiftStart, List<String> checkIns) {
+    private double calculateDayshiftHours(LocalTime dayShiftStart, List<String> checkIns, LocalTime endTime) {
         double dayshiftHours = Duration.between(
                 dayShiftStart,
-                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+                endTime
         ).toMinutes() / 60.0;
         return dayshiftHours;
     }
