@@ -149,8 +149,10 @@ public class ReportGenerator {
                 i = dayShiftResult.getIndex();
 
                 // Defensive check
-                if (dayShiftStart.isBefore(LocalTime.parse("09:00"))) {
-                    debug("⚠ Day shift start before 09:00 — invalid night shift pattern. Treating as single continuous shift.");
+                if (dayShiftStart.isBefore(LocalTime.parse("09:00"))
+                        || dayShiftStart.isAfter(LocalTime.parse("10:00"))
+                ) {
+                    debug("⚠ Day shift start not in expected range (09:00-10:00). Treating as single continuous night shift.");
                     return morningHours + nightHours;
                 }
                 // Calculate day session hours
