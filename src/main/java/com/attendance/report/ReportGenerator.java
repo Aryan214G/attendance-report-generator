@@ -15,25 +15,6 @@ public class ReportGenerator {
         if (DEBUG) System.out.println(msg);
     }
 
-    //for breaks during day
-    private double calculatePairedHours(List<String> checkIns) {
-        double hours = 0;
-
-        for (int i = 0; i + 1 < checkIns.size(); i += 2) {
-            LocalTime in = LocalTime.parse(checkIns.get(i));
-            LocalTime out = LocalTime.parse(checkIns.get(i + 1));
-
-            if (out.isBefore(in)) {
-                // defensive check
-                continue;
-            }
-
-            debug("Session: " + in + " → " + out + " = " + (Duration.between(in, out).toMinutes() / 60.0));
-            hours += Duration.between(in, out).toMinutes() / 60.0;
-        }
-
-        return hours;
-    }
 
     public List<ReportRow> generateReport(List<EmployeeAttendance> employees, int workingDaysInMonth, double workingHoursPerDay) {
         List<ReportRow> report = new ArrayList<>();
@@ -69,9 +50,25 @@ public class ReportGenerator {
                 } //nigh shift handled, skip to next day
 
                 // ========== normal case ==========
-                double worked = calculatePairedHours(checkIns);
-                debug("🕘 Paired sessions total = " + worked);
-                totalWorked += worked;
+                double dayWorked = 0;
+                LocalTime dayShiftStart = LocalTime.parse(checkIns.get(0));
+
+                //case 1: no night shift next day
+                if(!nightShiftExists(checkIns, day, dailyCheckIns)) {
+                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
+                }
+                //case 2: night shift next day
+                else {
+                    IndexTimePair nightStartResult = findNightShiftStart(checkIns, dailyCheckIns.get(day));
+                    int index = nightStartResult.getIndex();
+
+                    while(isDuplicateCheckIn(checkIns, index)) {
+                        index--;
+                    }
+                    LocalTime dayEnd = LocalTime.parse(checkIns.get(index));
+                    dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
+                }
+                totalWorked += dayWorked;
             }
 
             debug("\nTOTAL WORKED (raw): " + totalWorked);
@@ -101,7 +98,9 @@ public class ReportGenerator {
         {
 
             //Stepping back to find night shift start
-            LocalTime nightStart = findNightShiftStart(checkIns, prevDayCheckIns);
+            IndexTimePair nightStartResult = findNightShiftStart(checkIns, prevDayCheckIns);
+            LocalTime nightStart = nightStartResult.getTime();
+
             debug("🌙 Night shift start detected at: " + nightStart);
 
             // Case 1: Only 1 or 2 timestamps => NOT a dual shift
@@ -164,6 +163,7 @@ public class ReportGenerator {
             }
             return null;
         }
+
     private double nonDualShift (LocalTime nightStart, List<String> checkIns) {
         double hours = calculateHoursTillMidnight(nightStart, checkIns);
         hours += Duration.between(
@@ -218,7 +218,7 @@ public class ReportGenerator {
         return new IndexTimePair(i, dayShiftStart);
     }
 
-    private LocalTime findNightShiftStart(List<String> checkIns, List<String> prevDayCheckIns) {
+    private IndexTimePair findNightShiftStart(List<String> checkIns, List<String> prevDayCheckIns) {
         LocalTime nightStart;
         int j = prevDayCheckIns.size() - 1;
         while (j > 0 && LocalTime.parse(prevDayCheckIns.get(j)).isAfter(LocalTime.parse("23:30"))) {
@@ -226,7 +226,7 @@ public class ReportGenerator {
             j--;
         }
         nightStart = LocalTime.parse(prevDayCheckIns.get(j));
-        return nightStart;
+        return new IndexTimePair(j, nightStart);
     }
 
     private double outOfBoundsHandler(LocalTime nightStart, List<String> checkIns) {
@@ -257,6 +257,24 @@ public class ReportGenerator {
         morningCheckout = LocalTime.parse(checkIns.get(i));
 
         return new IndexTimePair(i, morningCheckout);
+    }
+
+    private boolean nightShiftExists(List<String> checkIns, int day, Map<Integer, List<String>> dailyCheckIns) {
+        int nextDay = day + 1;
+
+        List<String> nextDayCheckIns = dailyCheckIns.get(nextDay);
+        if(nextDayCheckIns == null) { return false;
+        }
+        else return LocalTime.parse(nextDayCheckIns.get(0))
+                .isBefore(LocalTime.parse("01:00"));
+    }
+
+    private boolean isDuplicateCheckIn(List<String> checkIns, int index) {
+        if (index <= 0) return false;
+        LocalTime current = LocalTime.parse(checkIns.get(index));
+        LocalTime previous = LocalTime.parse(checkIns.get(index - 1));
+        Duration diff = Duration.between(previous, current);
+        return diff.toMinutes() < 5; //considered duplicate if less than 5 minutes apart
     }
 
     private void reportHelper(int workingDaysInMonth, double workingHoursPerDay, double totalWorked, EmployeeAttendance emp, int singleCheckIns, List<ReportRow> report) {
