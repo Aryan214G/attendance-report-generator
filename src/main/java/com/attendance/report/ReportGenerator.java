@@ -56,17 +56,18 @@ public class ReportGenerator {
                 //case 1: no night shift next day
                 if(!nightShiftExists(checkIns, day, dailyCheckIns)) {
                     dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
+                    debug( "☀ Day shift detected: " + dayShiftStart + " → " + checkIns.get(checkIns.size() - 1) + " = " + dayWorked);
                 }
                 //case 2: night shift next day
                 else {
                     IndexTimePair nightStartResult = findNightShiftStart(checkIns, dailyCheckIns.get(day));
                     int index = nightStartResult.getIndex();
-
                     while(isDuplicateCheckIn(checkIns, index)) {
                         index--;
                     }
                     LocalTime dayEnd = LocalTime.parse(checkIns.get(index));
                     dayWorked = calculateDayshiftHours(dayShiftStart, checkIns);
+                    debug( "☀ Day shift with night return detected: " + dayShiftStart + " → " + dayEnd + " = " + dayWorked);
                 }
                 totalWorked += dayWorked;
             }
