@@ -66,7 +66,13 @@ public class ReportGenerator {
                     while(isDuplicateCheckIn(checkIns, index)) {
                         index--;
                     }
-                    LocalTime dayEnd = LocalTime.parse(checkIns.get(index));
+
+                    //defensive check
+                    if(index <= 0) {
+                        debug("⚠ Unable to determine day shift end, skipping day.");
+                        continue;
+                    }
+                    LocalTime dayEnd = LocalTime.parse(checkIns.get(index - 1));
                     dayWorked = calculateDayshiftHours(dayShiftStart, checkIns, dayEnd);
                     debug( "☀ Day shift with night return detected: " + dayShiftStart + " → " + dayEnd + " = " + dayWorked);
                 }
@@ -254,7 +260,7 @@ public class ReportGenerator {
         LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
 
         while (i < checkIns.size() && !morningCheckout.isAfter(LocalTime.parse("09:00"))) {
-            debug("Still before noon: " + checkIns.get(i));
+            debug("Still before 9AM: " + checkIns.get(i));
             i++;
             if (i < checkIns.size())
                 morningCheckout = LocalTime.parse(checkIns.get(i));
