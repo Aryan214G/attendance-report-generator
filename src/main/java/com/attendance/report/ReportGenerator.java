@@ -220,7 +220,8 @@ public class ReportGenerator {
 
     private MorningCheckoutResult findMorningCheckout(int i, List<String> checkIns) {
         LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
-        while (i < checkIns.size() && !morningCheckout.isAfter(LocalTime.parse("12:00"))) {
+
+        while (i < checkIns.size() && !morningCheckout.isAfter(LocalTime.parse("09:00"))) {
             debug("Still before noon: " + checkIns.get(i));
             i++;
             if (i < checkIns.size())
