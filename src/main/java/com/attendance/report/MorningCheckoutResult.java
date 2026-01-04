@@ -2,11 +2,11 @@ package com.attendance.report;
 
 import java.time.LocalTime;
 
-public class MorningCheckoutResult {
+public class IndexTimePair {
     private final int index;
     private final LocalTime time;
 
-    public MorningCheckoutResult(int index, LocalTime time) {
+    public IndexTimePair(int index, LocalTime time) {
         this.index = index;
         this.time = time;
     }

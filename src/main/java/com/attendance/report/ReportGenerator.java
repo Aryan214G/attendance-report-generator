@@ -123,7 +123,7 @@ public class ReportGenerator {
             }
 
             //choose the time closest to 9AM as morning checkout
-            MorningCheckoutResult result = findMorningCheckout(i, checkIns);
+            IndexTimePair result = findMorningCheckout(i, checkIns);
             i = result.getIndex();
             LocalTime morningCheckout = result.getTime();
 
@@ -140,23 +140,27 @@ public class ReportGenerator {
 
                 debug("Morning session: 00:00 → " + morningCheckout + " = " + morningHours);
 
-                // If no night session exists after morning
+                // safety check for sessions after end of night shift
                 if (i + 1 >= checkIns.size()) {
-                    debug("⚠ No night session after morning. Treating as single continuous shift.");
+                    debug("⚠ No sessions after morning. Treating as single continuous night shift.");
                     return morningHours + nightHours;
                 }
 
-                // Safe to calculate night session
-                LocalTime nightIn = LocalTime.parse(checkIns.get(i + 1));
-                LocalTime nightOut = LocalTime.parse(checkIns.get(checkIns.size() - 1));
-                if (nightOut.isBefore(LocalTime.parse("23:30"))) {
-                    debug("⚠ Night checkout before 23:30 — invalid night shift pattern. Treating as single continuous shift.");
-                    return morningHours;
+                //check start of dayshift after morning checkout
+            IndexTimePair dayShiftResult = findDayShiftStart(checkIns, i);
+                LocalTime dayShiftStart = dayShiftResult.getTime();
+                i = dayShiftResult.getIndex();
+
+                // Defensive check
+                if (dayShiftStart.isBefore(LocalTime.parse("09:00"))) {
+                    debug("⚠ Day shift start before 09:00 — invalid night shift pattern. Treating as single continuous shift.");
+                    return morningHours + nightHours;
                 }
-                nightHours = Duration.between(nightIn, nightOut).toMinutes() / 60.0;
-                debug("Night session: " + nightIn + " → " + nightOut + " = " + nightHours);
-//            totalWorked += morningHours + nightHours;
-                return morningHours + nightHours;
+                // Calculate day session hours
+                double dayshiftHours = calculateDayshiftHours(dayShiftStart, checkIns);
+                debug("Day session: " + dayShiftStart + " → " + checkIns.get(checkIns.size() - 1) + " = " + dayshiftHours);
+
+                return morningHours + nightHours + dayshiftHours;
             }
             return null;
         }
@@ -193,6 +197,27 @@ public class ReportGenerator {
         return hours;
     }
 
+    private double calculateDayshiftHours(LocalTime dayShiftStart, List<String> checkIns) {
+        double dayshiftHours = Duration.between(
+                dayShiftStart,
+                LocalTime.parse(checkIns.get(checkIns.size() - 1))
+        ).toMinutes() / 60.0;
+        return dayshiftHours;
+    }
+
+    private IndexTimePair findDayShiftStart(List<String> checkIns, int i) {
+        LocalTime dayShiftStart = LocalTime.parse(checkIns.get(i + 1));
+        while (i + 1 < checkIns.size()
+                && dayShiftStart.isBefore(LocalTime.parse("09:00"))) {
+            debug("Stepping forward to find day shift start: " + checkIns.get(i + 1));
+            i++;
+            if (i + 1 < checkIns.size()) {
+                dayShiftStart = LocalTime.parse(checkIns.get(i + 1));
+            }
+        }
+        return new IndexTimePair(i, dayShiftStart);
+    }
+
     private LocalTime findNightShiftStart(List<String> checkIns, List<String> prevDayCheckIns) {
         LocalTime nightStart;
         int j = prevDayCheckIns.size() - 1;
@@ -219,7 +244,7 @@ public class ReportGenerator {
         return hours;
     }
 
-    private MorningCheckoutResult findMorningCheckout(int i, List<String> checkIns) {
+    private IndexTimePair findMorningCheckout(int i, List<String> checkIns) {
         LocalTime morningCheckout = LocalTime.parse(checkIns.get(i));
 
         while (i < checkIns.size() && !morningCheckout.isAfter(LocalTime.parse("09:00"))) {
@@ -231,7 +256,7 @@ public class ReportGenerator {
         i--; //step back to last before noon
         morningCheckout = LocalTime.parse(checkIns.get(i));
 
-        return new MorningCheckoutResult(i, morningCheckout);
+        return new IndexTimePair(i, morningCheckout);
     }
 
     private void reportHelper(int workingDaysInMonth, double workingHoursPerDay, double totalWorked, EmployeeAttendance emp, int singleCheckIns, List<ReportRow> report) {
