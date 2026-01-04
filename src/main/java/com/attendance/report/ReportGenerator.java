@@ -186,13 +186,10 @@ public class ReportGenerator {
     }
 
     private double calculateHoursTillMidnight(LocalTime nightStart, List<String> checkIns) {
-        double hours = 0;
-        if (nightStart.isBefore(LocalTime.MIDNIGHT)) {
-            hours = Duration.between(
+        double hours = Duration.between(
                     nightStart,
                     LocalTime.parse("23:59")
             ).toMinutes() / 60.0;
-        }
         return hours;
     }
 
