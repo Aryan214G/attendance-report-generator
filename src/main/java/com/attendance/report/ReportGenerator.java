@@ -122,13 +122,14 @@ public class ReportGenerator {
                 return hours;
             }
 
-            //choose the time closest to noon as morning checkout
+            //choose the time closest to 9AM as morning checkout
             MorningCheckoutResult result = findMorningCheckout(i, checkIns);
             i = result.getIndex();
             LocalTime morningCheckout = result.getTime();
 
             // Calculate night session hours
             double nightHours = calculateHoursTillMidnight(nightStart, checkIns);
+            debug("Night session: " + nightStart + " → 00:00 = " + nightHours);
 
                 // Calculate morning session hours
                 double morningHours = 0;
