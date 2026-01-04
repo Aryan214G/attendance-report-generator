@@ -131,11 +131,7 @@ public class ReportGenerator {
             debug("Night session: " + nightStart + " → 00:00 = " + nightHours);
 
                 // Calculate morning session hours
-                double morningHours = 0;
-                morningHours = Duration.between(
-                        LocalTime.MIDNIGHT,
-                        morningCheckout
-                ).toMinutes() / 60.0;
+                double morningHours = calculateHoursTillMorning(morningCheckout);
 
                 debug("Morning session: 00:00 → " + morningCheckout + " = " + morningHours);
 
@@ -191,10 +187,18 @@ public class ReportGenerator {
         if (nightStart.isBefore(LocalTime.MIDNIGHT)) {
             hours = Duration.between(
                     nightStart,
-                    LocalTime.MAX.plusNanos(1) // to include midnight as 24:00 and not 00:00
+                    LocalTime.parse("23:59")
             ).toMinutes() / 60.0;
         }
         return hours;
+    }
+
+    private double calculateHoursTillMorning(LocalTime morningCheckout) {
+        double morningHours = Duration.between(
+                LocalTime.MIDNIGHT,
+                morningCheckout
+        ).toMinutes() / 60.0;
+        return morningHours;
     }
 
     private double calculateDayshiftHours(LocalTime dayShiftStart, List<String> checkIns) {
