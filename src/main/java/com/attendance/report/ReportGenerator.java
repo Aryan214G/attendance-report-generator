@@ -112,10 +112,10 @@ public class ReportGenerator {
             debug("🌙 Night shift start detected at: " + nightStart);
 
             // Case 1: Only 1 or 2 timestamps => NOT a dual shift
-            if (checkIns.size() < 3) {
-                double hours = nonDualShift(nightStart, checkIns);
-                return hours;
-            }
+//            if (checkIns.size() < 3) {
+//                double hours = nonDualShift(nightStart, checkIns);
+//                return hours;
+//            }
 
             debug("🌙 Night shift detected — entering dual-session handler");
 
@@ -251,6 +251,7 @@ public class ReportGenerator {
         ).toMinutes() / 60.0;
 
         debug("⚠ Incomplete night shift pattern. Using full session: " + nightStart + " -> "
+                + "00:00 → "
                 + checkIns.get(checkIns.size() - 1) + " = "
                 + hours);
         return hours;
