@@ -25,7 +25,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
+            <Menu mnemonicParsing="false" text="Settings">
                 <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleChangePassword" text="Change Password" />
                 </items>

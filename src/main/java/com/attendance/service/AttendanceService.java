@@ -152,7 +152,7 @@ public class AttendanceService {
         }
         try {
             fileDirectoryHelper();
-            String rootDir = getRootDirectory(); //TODO: Fix rootDir = null bug
+            String rootDir = getRootDirectory();
             String csvDir = rootDir + File.separator + "CSVReports";
             String pdfDir = rootDir + File.separator + "PDFReports";
             File csv = new File(csvDir);
