@@ -98,10 +98,10 @@ public class FormController implements Initializable {
         if (debug) {
             javafx.application.Platform.runLater(() -> {
                 // Auto-fill the form in DEBUG mode
-                monthChoiceBox.setValue("January");
+                monthChoiceBox.setValue("March");
                 yearField.setText("2026");
-                workingDaysField.setText("25");
-                workingHoursField.setText("8");
+                workingDaysField.setText("14");
+                workingHoursField.setText("8.5");
 
                 // OPTIONAL:
                 // Automatically press "Next" after filling in values

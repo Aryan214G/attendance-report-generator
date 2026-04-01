@@ -44,8 +44,8 @@ public class ExcelLoaderController {
 
         if (debug) {
             List<File> testFiles = List.of(
-                    new File("E:/projects/attendance project files/night shift/dec-ccd.xlsx"),
-                    new File("E:/projects/attendance project files/night shift/dec-2025-pwt.xlsx")
+                    new File("C:/Users/aryan/Documents/attendance files/attendence 31/ccd-mar (1).xlsx"),
+                    new File("C:/Users/aryan/Documents/attendance files/attendence 31/pwt-mar.xlsx")
             );
 
             AppContext.setSelectedExcelFiles(testFiles);
