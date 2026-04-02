@@ -2,6 +2,9 @@ package com.attendance.report;
 
 import com.attendance.model.EmployeeAttendance;
 import com.attendance.model.ReportRow;
+import com.attendance.util.LogExportUtil;
+import com.attendance.util.LoggerUtil;
+
 import java.time.LocalTime;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -11,8 +14,9 @@ import java.util.Map;
 public class ReportGenerator {
     private static final boolean DEBUG = true; // turn off later if needed
 
+
     private void debug(String msg) {
-        if (DEBUG) System.out.println(msg);
+        if (DEBUG) LoggerUtil.log(msg);
     }
 
 
@@ -84,6 +88,7 @@ public class ReportGenerator {
 
             reportHelper(workingDaysInMonth, workingHoursPerDay, totalWorked, emp, singleCheckIns, report);
         }
+        LogExportUtil.exportAttendanceLog(LoggerUtil.getLog());
         return report;
     }
 

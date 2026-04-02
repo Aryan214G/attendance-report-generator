@@ -76,6 +76,25 @@ public class MainViewController {
     }
 
     @FXML
+    public void openFolderWithLogs(ActionEvent event)
+    {
+        String userHome = System.getProperty("user.home");
+        String documentsDir = userHome + File.separator + "Documents";
+        String rootDir = documentsDir + File.separator + "AttendanceReports";
+        String logsDir = rootDir + File.separator + "logs";
+        try{
+            File logFolder = new File((logsDir));
+            if(Desktop.isDesktopSupported() && logFolder.exists()) {
+                Desktop.getDesktop().open(logFolder);
+            } else {
+                System.out.println("Desktop is not supported or directory does not exist.");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
     public void initialize() {
         AppContext.getAttendanceService().fileDirectoryHelper();
         loadRecentReports();
