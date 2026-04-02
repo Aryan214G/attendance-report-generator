@@ -6,6 +6,7 @@ import com.attendance.service.AttendanceService;
 import java.io.File;
 import java.util.List;
 
+//convert to singleton
 public class AppContext {
     private static final AttendanceService attendanceService = new AttendanceService();
     private static List<File> selectedExcelFiles;
