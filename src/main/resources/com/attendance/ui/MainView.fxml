@@ -20,7 +20,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#switchToExcelLoaderScene" text="New file" />
-                  <MenuItem fx:id="openFolder" mnemonicParsing="false" onAction="#openFolderWithReports" text="Open folder" />
+                  <MenuItem fx:id="openFolder" mnemonicParsing="false" onAction="#openFolderWithReports" text="Open reports folder" />
+                  <MenuItem fx:id="openLogsFolder" mnemonicParsing="false" onAction="#openFolderWithLogs" text="Open logs folder" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
             </items>
